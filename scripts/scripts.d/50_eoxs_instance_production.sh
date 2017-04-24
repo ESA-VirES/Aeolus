@@ -15,7 +15,7 @@ info "Configuring EOxServer instance ... "
 #       don't play nice with fabric and virtualenv.
 
 # Configuration switches - all default to YES
-CONFIGURE_VIRES=${CONFIGURE_VIRES:-YES}
+CONFIGURE_AEOLUS=${CONFIGURE_AEOLUS:-YES}
 CONFIGURE_ALLAUTH=${CONFIGURE_ALLAUTH:-YES}
 CONFIGURE_WPSASYNC=${CONFIGURE_WPSASYNC:-YES}
 
@@ -351,7 +351,7 @@ _create_log_file "$EOXSLOG"
 _create_log_file "$ACCESSLOG"
 
 #setup logrotate configuration
-cat >"/etc/logrotate.d/vires_eoxserver_${INSTANCE}" <<END
+cat >"/etc/logrotate.d/aeolus_eoxserver_${INSTANCE}" <<END
 $EOXSLOG {
     copytruncate
     weekly
@@ -380,9 +380,9 @@ info "Application specific configuration ..."
 
 # remove any previous configuration blocks
 { ex "$SETTINGS" || /bin/true ; } <<END
-/^# VIRES APPS - BEGIN/,/^# VIRES APPS - END/d
-/^# VIRES COMPONENTS - BEGIN/,/^# VIRES COMPONENTS - END/d
-/^# VIRES LOGGING - BEGIN/,/^# VIRES LOGGING - END/d
+/^# AEOLUS APPS - BEGIN/,/^# AEOLUS APPS - END/d
+/^# AEOLUS COMPONENTS - BEGIN/,/^# AEOLUS COMPONENTS - END/d
+/^# AEOLUS LOGGING - BEGIN/,/^# AEOLUS LOGGING - END/d
 /^# WPSASYNC COMPONENTS - BEGIN/,/^# WPSASYNC COMPONENTS - END/d
 /^# WPSASYNC LOGGING - BEGIN/,/^# WPSASYNC LOGGING - END/d
 /^# ALLAUTH APPS - BEGIN/,/^# ALLAUTH APPS - END/d
@@ -406,11 +406,11 @@ END
 
 # configure the apps ...
 
-if [ "$CONFIGURE_VIRES" != "YES" ]
+if [ "$CONFIGURE_AEOLUS" != "YES" ]
 then
-    warn "VIRES specific configuration is disabled."
+    warn "AEOLUS specific configuration is disabled."
 else
-    info "VIRES specific configuration ..."
+    info "AEOLUS specific configuration ..."
 
     # remove unnecessary or conflicting component paths
     { ex "$SETTINGS" || /bin/true ; } <<END
@@ -426,42 +426,34 @@ END
 /^INSTALLED_APPS\s*=/
 /^)/
 a
-# VIRES APPS - BEGIN - Do not edit or remove this line!
+# AEOLUS APPS - BEGIN - Do not edit or remove this line!
 INSTALLED_APPS += (
-    'vires',
+    'aeolus',
 )
-
-VIRES_AUX_DB_DST = join(PROJECT_DIR, "aux_dst.cdf")
-VIRES_AUX_DB_KP = join(PROJECT_DIR, "aux_kp.cdf")
-VIRES_AUX_DB_IBIA = join(PROJECT_DIR, "aux_ibia.cdf")
-
-# VIRES APPS - END - Do not edit or remove this line!
+# AEOLUS APPS - END - Do not edit or remove this line!
 .
 /^COMPONENTS\s*=/
 /^)/a
-# VIRES COMPONENTS - BEGIN - Do not edit or remove this line!
+# AEOLUS COMPONENTS - BEGIN - Do not edit or remove this line!
 COMPONENTS += (
-    'eoxserver.services.mapserver.wms.*',
-    'vires.processes.*',
-    'vires.ows.**',
-    'vires.forward_models.*',
-    'vires.mapserver.**',
+    #'eoxserver.services.mapserver.wms.*',
+    'aeolus.processes.*',
 )
-# VIRES COMPONENTS - END - Do not edit or remove this line!
+# AEOLUS COMPONENTS - END - Do not edit or remove this line!
 .
 \$a
-# VIRES LOGGING - BEGIN - Do not edit or remove this line!
-LOGGING['loggers']['vires'] = {
+# AEOLUS LOGGING - BEGIN - Do not edit or remove this line!
+LOGGING['loggers']['aeolus'] = {
     'handlers': ['eoxserver_file'],
     'level': 'DEBUG' if DEBUG else 'INFO',
     'propagate': False,
 }
-# VIRES LOGGING - END - Do not edit or remove this line!
+# AEOLUS LOGGING - END - Do not edit or remove this line!
 .
 wq
 END
 
-fi # end of VIRES configuration
+fi # end of AEOLUS configuration
 
 
 if [ "$CONFIGURE_ALLAUTH" != "YES" ]
@@ -547,7 +539,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_UNIQUE_EMAIL = True
-#ACCOUNT_EMAIL_SUBJECT_PREFIX = [vires.services]
+#ACCOUNT_EMAIL_SUBJECT_PREFIX = [aeolus.vires.services]
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
