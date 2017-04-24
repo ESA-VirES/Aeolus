@@ -10,6 +10,8 @@
 
 info "Adding VirES client to static files..."
 
+CLIENT_REQUIRED=${CLIENT_REQUIRED:-NO}
+
 [ -z "$VIRES_SERVER_HOME" ] && error "Missing the required VIRES_SERVER_HOME variable!"
 [ -z "$CONTRIB_DIR" ] && error "Missing the required CONTRIB_DIR variable!"
 [ -z "$VIRES_USER" ] && error "Missing the required VIRES_USER variable!"
@@ -24,7 +26,17 @@ WORKSPACE="${INSTROOT}/${INSTANCE}/${INSTANCE}/static/workspace/"
 # locate lates TGZ package
 FNAME="`ls "$CONTRIB_DIR"/{WebClient-Framework,VirES-Client}*.tar.gz 2>/dev/null | sort | tail -n 1`"
 
-[ -n "$FNAME" -a -f "$FNAME" ] || { error "Failed to locate the installation package." ; exit 1 ; }
+[ -n "$FNAME" -a -f "$FNAME" ] || {
+    if [ "$CLIENT_REQUIRED" == "YES" ]
+    then
+        error "Failed to locate the installation package."
+        exit 1
+    else
+        warn "Failed to locate the installation package."
+        warn "Client installation will be skipped."
+        exit 0
+    fi
+}
 
 # installing the ODA-Client
 

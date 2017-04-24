@@ -11,6 +11,8 @@
 
 info "Configuring VirES client ..."
 
+CLIENT_REQUIRED=${CLIENT_REQUIRED:-NO}
+
 [ -z "$VIRES_SERVER_HOME" ] && error "Missing the required VIRES_SERVER_HOME variable!"
 [ -z "$VIRES_CLIENT_HOME" ] && error "Missing the required VIRES_CLIENT_HOME variable!"
 [ -z "$VIRES_USER" ] && error "Missing the required VIRES_USER variable!"
@@ -30,6 +32,20 @@ fi
 
 #-------------------------------------------------------------------------------
 # Client configuration.
+
+info "CONFIG_JSON=$CONFIG_JSON"
+
+[ -f "$CONFIG_JSON" ] || {
+    if [ "$CLIENT_REQUIRED" == "YES" ]
+    then
+        error "Failed to locate the client configuration file."
+        exit 1
+    else
+        warn "Failed to locate the client configuration file."
+        warn "Client configuration will be skipped."
+        exit 0
+    fi
+}
 
 # locate original replaced URL
 OLD_URL="`sudo -u "$VIRES_USER" jq -r '.mapConfig.products[].download.url | select(.)' "$CONFIG_JSON" | sort | uniq | grep '/ows$' | head -n 1`"
