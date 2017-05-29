@@ -263,7 +263,7 @@ END
 
 # set the allowed hosts
 # NOTE: Set the hostname manually if needed.
-#TODO add vires.services and env.host to ALLOWED_HOSTS
+#TODO add aeolus.services and env.host to ALLOWED_HOSTS
 ex "$SETTINGS" <<END
 1,\$s/\(^ALLOWED_HOSTS\s*=\s*\).*/\1['${VIRES_HOSTNAME_INTERNAL}','${VIRES_IP_ADDRESS}','${HOSTNAME}','127.0.0.1','::1']/
 wq
@@ -539,7 +539,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_UNIQUE_EMAIL = True
-#ACCOUNT_EMAIL_SUBJECT_PREFIX = [aeolus.vires.services]
+#ACCOUNT_EMAIL_SUBJECT_PREFIX = [aeolus.services]
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'

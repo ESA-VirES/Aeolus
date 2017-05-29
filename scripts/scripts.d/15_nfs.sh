@@ -63,9 +63,9 @@ then
         chown $VIRES_USER:$VIRES_GROUP  $VIRES_DATADIR'/ftp_in'
     fi
 
-    if [ ! -d $VIRES_DATADIR'/swarm' ]; then
-        mkdir -p -m 0775  $VIRES_DATADIR'/swarm'
-        chown $VIRES_USER:$VIRES_GROUP  $VIRES_DATADIR'/swarm'
+    if [ ! -d $VIRES_DATADIR'/aeolus' ]; then
+        mkdir -p -m 0775  $VIRES_DATADIR'/aeolus'
+        chown $VIRES_USER:$VIRES_GROUP  $VIRES_DATADIR'/aeolus'
     fi
 
     systemctl enable rpcbind
@@ -100,7 +100,7 @@ then
     if [ -z "`grep -e "${VIRES_DATADIR}" /etc/fstab`" ]; then
         cat <<EOF>>  /etc/fstab
 
-## mount the nfs-exported swarm data storage
+## mount the nfs-exported aeolus data storage
 ${NFSSERVER_HOSTNAME}:${VIRES_DATADIR}   ${VIRES_DATADIR}       nfs     defaults,nosuid,noexec,nodev  0 0
 EOF
     fi
