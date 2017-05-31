@@ -1,29 +1,29 @@
 #!/bin/sh
 #-------------------------------------------------------------------------------
 #
-# Purpose: VirES server - production mode
+# Purpose: EOxServer django-allauth integration
 # Author(s): Martin Paces <martin.paces@eox.at>
 #-------------------------------------------------------------------------------
 # Copyright (C) 2015 EOX IT Services GmbH
 
 . `dirname $0`/../lib_logging.sh
 
-info "Installing Aeolus-Server package."
+info "Installing EOxServer django-allauth integration package."
 
 # Path to the VirES-Server development directory tree:
-VIRES_DEV_PATH="${VIRES_DEV_PATH:-/usr/local/aeolus}"
+EOXS_ALLAUTH_DEV_PATH="${EOXS_ALLAUTH_DEV_PATH:-/usr/local/eoxs-allauth}"
 
 # STEP 1: INSTALL DEPENDENCIES
-yum --assumeyes install python-matplotlib python-setuptools
+yum --assumeyes install python-setuptools
 
-# STEP 2: INSTALL VIRES
+# STEP 2: INSTALL EOxServer django-allauth integration
 # setup.py install keeps messy leftovers!
 # Uninstall previously installed package.
-PACKAGE=Aeolus-Server
+PACKAGE=EOxServer-allauth
 [ -z "`pip freeze | grep "$PACKAGE" `" ] || pip uninstall -y "$PACKAGE"
 pushd .
-cd "$VIRES_DEV_PATH"
+cd "$EOXS_ALLAUTH_DEV_PATH"
 [ ! -d build/ ] || rm -fvR build/
 [ ! -d dist/ ] || rm -fvR dist/
-python ./setup.py install
+python ./setup.py develop
 popd
