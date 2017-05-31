@@ -79,10 +79,10 @@ INSTALL_LOG="./install.`date -u +%Y%m%d`.log"
     # just in case the ODA-OS directories do not exists create them
     # and set the right permissions
 
-    _mkdir "$VIRES_USER:$VIRES_GROUP" 0755 "$VIRES_ROOT" "subsytem's root directory"
-    _mkdir "$VIRES_USER:$VIRES_GROUP" 0775 "$VIRES_LOGDIR" "subsytem's logging directory"
-    _mkdir "$VIRES_USER:$VIRES_GROUP" 0775 "$VIRES_DATADIR" "subsytem's long-term data storage directory"
-    _mkdir "$VIRES_USER:$VIRES_GROUP" 0775 "$VIRES_TMPDIR" "subsytem's short-term data storage directory"
+    _mkdir "$VIRES_USER:$VIRES_GROUP" 0755 "$VIRES_ROOT" "subsystem's root directory"
+    _mkdir "$VIRES_USER:$VIRES_GROUP" 0775 "$VIRES_LOGDIR" "subsystem's logging directory"
+    _mkdir "$VIRES_USER:$VIRES_GROUP" 0775 "$VIRES_DATADIR" "subsystem's long-term data storage directory"
+    _mkdir "$VIRES_USER:$VIRES_GROUP" 0775 "$VIRES_TMPDIR" "subsystem's short-term data storage directory"
 
     #-------------------------------------------------------------------------------
     # execute specific installation scripts
