@@ -23,7 +23,7 @@ PACKAGE=VirES-Server
 [ -z "`pip freeze | grep "$PACKAGE" `" ] || pip uninstall -y "$PACKAGE"
 # Install VirES EOxServer extension
 pushd .
-cd "$VIRES_DEV_PATH/vires"
+cd "$VIRES_DEV_PATH"
 [ ! -d build/ ] || rm -fvR build/
 [ ! -d dist/ ] || rm -fvR dist/
 python ./setup.py install
