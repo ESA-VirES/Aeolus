@@ -24,7 +24,7 @@ WORKSPACE="${INSTROOT}/${INSTANCE}/${INSTANCE}/static/workspace/"
 
 
 # locate lates TGZ package
-FNAME="`ls "$CONTRIB_DIR"/{WebClient-Framework,VirES-Client}*.tar.gz 2>/dev/null | sort | tail -n 1`"
+FNAME="`ls "$CONTRIB_DIR"/{WebClient-Framework,VirES-Client,Aeolus-Client}*.tar.gz 2>/dev/null | sort | tail -n 1`"
 
 [ -n "$FNAME" -a -f "$FNAME" ] || {
     if [ "$CLIENT_REQUIRED" == "YES" ]
