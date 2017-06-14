@@ -52,7 +52,7 @@ info "Installation package located in: $FNAME"
 tar -xzf "$FNAME" --directory="$TMPDIR"
 
 # move to destination
-ROOT="`find "$TMPDIR" -mindepth 1 -maxdepth 1 -type d \( -name 'VirES-Client*' -o -name 'WebClient-Framework*' \) | head -n 1`"
+ROOT="`find "$TMPDIR" -mindepth 1 -maxdepth 1 -type d \( -name 'VirES-Client*' -o -name 'Aeolus-Client' -o -name 'WebClient-Framework*' \) | head -n 1`"
 mv -f "$ROOT" "$WORKSPACE"
 chown -R "$VIRES_USER:$VIRES_GROUP" "$WORKSPACE"
 
