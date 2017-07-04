@@ -11,7 +11,7 @@
 info "Installing Aeolus-Server package in the development mode."
 
 # Path to the VirES-Server development directory tree:
-AEOLUS_DEV_PATH="${AEOLUS_DEV_PATH:-/usr/local/aeolus}"
+VIRES_DEV_PATH="${VIRES_DEV_PATH:-/usr/local/aeolus}"
 
 # STEP 1: INSTALL DEPENDENCIES
 yum --assumeyes install python-matplotlib python-setuptools
@@ -19,6 +19,6 @@ yum --assumeyes install python-matplotlib python-setuptools
 # STEP 2: INSTALL VIRES
 # Install VirES EOxServer extension
 pushd .
-cd "$AEOLUS_DEV_PATH"
+cd "$VIRES_DEV_PATH"
 python ./setup.py develop
 popd
