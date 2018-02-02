@@ -30,6 +30,7 @@ COLLECTION_TO_RANGETYPE=(
     ["L2A"]="ALD_U_N_2A"
     ["L2B"]="ALD_U_N_2B"
     ["AUX_ISR"]="AUX_ISR_1B"
+    ["AUX_MET"]="AUX_MET_12"
     ["AUX_MRC"]="AUX_MRC_1B"
     ["AUX_RRC"]="AUX_RRC_1B"
     ["AUX_ZWC"]="AUX_ZWC_1B"
