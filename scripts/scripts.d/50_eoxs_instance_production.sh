@@ -438,6 +438,8 @@ INSTALLED_APPS += (
 COMPONENTS += (
     #'eoxserver.services.mapserver.wms.*',
     'aeolus.processes.*',
+    'aeolus.mapserver.**',
+    'eoxserver.services.mapserver.wms.*',
 )
 # AEOLUS COMPONENTS - END - Do not edit or remove this line!
 .
