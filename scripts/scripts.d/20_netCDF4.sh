@@ -10,4 +10,4 @@
 
 info "Installing netCDF4 ..."
 
-pip install netcdf4
+yum install --assumeyes netcdf4-python
