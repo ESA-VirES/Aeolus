@@ -26,22 +26,6 @@ find /mnt/data/AUX_MET_12/ -type f -iname "*.DBL" -exec sudo python /var/www/vir
 
 
 sudo python /var/www/vires/eoxs/manage.py eoxs_collection_create -i ADAM_albedo
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2003 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2004 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2005 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2005 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2006 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2007 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2008 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2009 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2010 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2011 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2012 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2013 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2014 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2015 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2016 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2017 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2018 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2019 -c ADAM_albedo --conflict=REPLACE;done
-for i in {1..12};do sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -y 2020 -c ADAM_albedo --conflict=REPLACE;done
+for i in {1..12}; do
+    sudo python /var/www/vires/eoxs/manage.py aeolus_albedo_register -f /mnt/data/Albedo_maps/SDR_${i}.nc -m ${i} -r 2003-2020 -c ADAM_albedo --conflict=REPLACE
+done
