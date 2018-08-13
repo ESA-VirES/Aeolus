@@ -357,7 +357,7 @@ $EOXSLOG {
     weekly
     minsize 1M
     compress
-    rotate 16
+    rotate 560
     missingok
 }
 $ACCESSLOG {
@@ -365,7 +365,7 @@ $ACCESSLOG {
     weekly
     minsize 1M
     compress
-    rotate 16
+    rotate 560
     missingok
 }
 END
@@ -438,6 +438,8 @@ INSTALLED_APPS += (
 COMPONENTS += (
     #'eoxserver.services.mapserver.wms.*',
     'aeolus.processes.*',
+    'aeolus.mapserver.**',
+    'eoxserver.services.mapserver.wms.*',
 )
 # AEOLUS COMPONENTS - END - Do not edit or remove this line!
 .

@@ -37,7 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #config.vm.synced_folder "../../vires-aeolus_ops", "/usr/local/vires-aeolus_ops", owner: "root", group: "root"
   config.vm.synced_folder "../", "/home/vagrant/Aeolus", owner: "vagrant", group: "vagrant"
   # data directory (Change to your custom data directory if necessary.)
-  config.vm.synced_folder "../data", "/mnt/data", owner: "root", group: "root"
+  config.vm.synced_folder "../data", "/mnt/data"
 
   # Shell provisioning
   config.vm.provision :shell, :inline => "cd /home/vagrant/Aeolus/scripts/ ; /bin/sh ./install.sh -d"

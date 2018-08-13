@@ -442,9 +442,19 @@ LOGGING['loggers']['aeolus'] = {
     'propagate': False,
 }
 # AEOLUS LOGGING - END - Do not edit or remove this line!
+USER_UPLOAD_DIR = "/var/www/vires/user_uploads"
 .
 wq
 END
+
+    # extending the EOxServer urls.py
+    sudo -u "$VIRES_USER" echo "
+from aeolus.views import upload_user_file
+
+urlpatters += (
+    (r'^upload/$', upload_user_file),
+)
+" >> "$URLS"
 
 fi # end of AEOLUS configuration
 
@@ -588,7 +598,7 @@ END
 wq
 END
 
-    # extending the EOxServer settings.py
+    # extending the EOxServer urls.py
     sudo -u "$VIRES_USER" ex "$URLS" <<END
 $ a
 # ALLAUTH URLS - BEGIN - Do not edit or remove this line!
