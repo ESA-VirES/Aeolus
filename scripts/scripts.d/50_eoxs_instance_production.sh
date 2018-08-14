@@ -503,6 +503,8 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     },
 }
+# Setting to deactivate registration, comment line below to reactivate it
+ACCOUNT_ADAPTER = 'models.MyAccountAdapter'
 
 # ALLAUTH APPS - END - Do not edit or remove this line!
 .
