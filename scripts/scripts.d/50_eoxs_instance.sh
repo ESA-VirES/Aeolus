@@ -451,7 +451,7 @@ END
     sudo -u "$VIRES_USER" echo "
 from aeolus.views import upload_user_file
 
-urlpatters += (
+urlpatterns += patterns('',
     (r'^upload/$', upload_user_file),
 )
 " >> "$URLS"
