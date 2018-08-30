@@ -11,7 +11,7 @@
 AEOLUS_DEFINITION_FILE=AEOLUS-20170913.codadef
 AEOLUS_DEFINITION_URL=https://github.com/stcorp/codadef-aeolus/releases/download/20170913/${AEOLUS_DEFINITION_FILE}
 
-if [ ! -f "/usr/local/share/coda/definitions/${AEOLUS_DEFINITION_URL}" ]; then
+if [ ! -f "/usr/share/coda/definitions/${AEOLUS_DEFINITION_FILE}" ]; then
     info "Fetching coda Aeolus definition files ..."
     wget -q -P /usr/share/coda/definitions/ $AEOLUS_DEFINITION_URL
 fi
