@@ -54,6 +54,7 @@ WSGI_FILE="${INSTROOT}/${INSTANCE}/${INSTANCE}/wsgi.py"
 URLS="${INSTROOT}/${INSTANCE}/${INSTANCE}/urls.py"
 FIXTURES_DIR="${INSTROOT}/${INSTANCE}/${INSTANCE}/data/fixtures"
 INSTSTAT_DIR="${INSTROOT}/${INSTANCE}/${INSTANCE}/static"
+USER_UPLOAD_DIR="${INSTROOT}/user_uploads"
 WSGI="${INSTROOT}/${INSTANCE}/${INSTANCE}/wsgi.py"
 MNGCMD="${INSTROOT}/${INSTANCE}/manage.py"
 #BASE_URL_PATH="/${INSTANCE}" # DO NOT USE THE TRAILING SLASH!!!
@@ -287,11 +288,11 @@ LOGGING = {
     },
     'formatters': {
         'default': {
-            'format': '%(asctime)s.%(msecs)03d %(name)s %(levelname)s: %(message)s',
+            'format': '[%(asctime)s.%(msecs)03d] %(name)s %(levelname)s: %(message)s',
             'datefmt': '%Y-%m-%dT%H:%M:%S',
         },
         'access': {
-            'format': '%(asctime)s.%(msecs)03d %(remote_addr)s %(username)s %(name)s %(levelname)s: %(message)s',
+            'format': '[%(asctime)s.%(msecs)03d] %(remote_addr)s %(username)s %(name)s %(levelname)s: %(message)s',
             'datefmt': '%Y-%m-%dT%H:%M:%S',
         },
     },
