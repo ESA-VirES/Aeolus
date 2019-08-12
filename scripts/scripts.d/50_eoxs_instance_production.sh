@@ -570,7 +570,7 @@ WORKSPACE_TEMPLATE="vires/workspace.html"
 OWS11_EXCEPTION_XSL = join(STATIC_URL, "other/owserrorstyle.xsl")
 
 # Disabled registration
-REGISTRATION_OPEN = False
+REGISTRATION_OPEN = True
 ACCOUNT_ADAPTER = 'eoxs_allauth.apps.NoNewUsersAccountAdapter'
 
 # ALLAUTH MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
