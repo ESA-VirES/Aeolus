@@ -476,34 +476,15 @@ INSTALLED_APPS += (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.twitter',
-    'allauth.socialaccount.providers.linkedin_oauth2',
-    'allauth.socialaccount.providers.google',
+    #'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.twitter',
+    #'allauth.socialaccount.providers.linkedin_oauth2',
+    #'allauth.socialaccount.providers.google',
     #'allauth.socialaccount.providers.github',
     #'allauth.socialaccount.providers.dropbox_oauth2',
     'django_countries',
 )
 
-SOCIALACCOUNT_PROVIDERS = {
-    'linkedin_oauth2': {
-        'SCOPE': [
-            'r_emailaddress',
-            'r_basicprofile',
-        ],
-       'PROFILE_FIELDS': [
-            'id',
-            'first-name',
-            'last-name',
-            'email-address',
-            'picture-url',
-            'public-profile-url',
-            'industry',
-            'positions',
-            'location',
-        ],
-    },
-}
 
 # ALLAUTH APPS - END - Do not edit or remove this line!
 .
@@ -570,8 +551,8 @@ WORKSPACE_TEMPLATE="vires/workspace.html"
 OWS11_EXCEPTION_XSL = join(STATIC_URL, "other/owserrorstyle.xsl")
 
 # Disabled registration
-REGISTRATION_OPEN = False
-ACCOUNT_ADAPTER = 'eoxs_allauth.apps.NoNewUsersAccountAdapter'
+REGISTRATION_OPEN = True
+#ACCOUNT_ADAPTER = 'eoxs_allauth.apps.NoNewUsersAccountAdapter'
 
 # ALLAUTH MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
 .
