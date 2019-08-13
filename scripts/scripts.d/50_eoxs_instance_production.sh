@@ -474,36 +474,17 @@ a
 INSTALLED_APPS += (
     'eoxs_allauth',
     'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.twitter',
-    'allauth.socialaccount.providers.linkedin_oauth2',
-    'allauth.socialaccount.providers.google',
+    #'allauth.account',
+    #'allauth.socialaccount',
+    #'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.twitter',
+    #'allauth.socialaccount.providers.linkedin_oauth2',
+    #'allauth.socialaccount.providers.google',
     #'allauth.socialaccount.providers.github',
     #'allauth.socialaccount.providers.dropbox_oauth2',
     'django_countries',
 )
 
-SOCIALACCOUNT_PROVIDERS = {
-    'linkedin_oauth2': {
-        'SCOPE': [
-            'r_emailaddress',
-            'r_basicprofile',
-        ],
-       'PROFILE_FIELDS': [
-            'id',
-            'first-name',
-            'last-name',
-            'email-address',
-            'picture-url',
-            'public-profile-url',
-            'industry',
-            'positions',
-            'location',
-        ],
-    },
-}
 
 # ALLAUTH APPS - END - Do not edit or remove this line!
 .
