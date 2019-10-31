@@ -8,8 +8,8 @@
 
 . `dirname $0`/../lib_logging.sh
 
-AEOLUS_DEFINITION_FILE=AEOLUS-20190408.codadef
-AEOLUS_DEFINITION_URL=https://github.com/stcorp/codadef-aeolus/releases/download/20190408/${AEOLUS_DEFINITION_FILE}
+AEOLUS_DEFINITION_FILE=AEOLUS-20191015.codadef
+AEOLUS_DEFINITION_URL=https://github.com/stcorp/codadef-aeolus/releases/download/20191015/${AEOLUS_DEFINITION_FILE}
 
 if [ ! -f "/usr/share/coda/definitions/${AEOLUS_DEFINITION_FILE}" ]; then
     info "Fetching coda Aeolus definition files ..."
