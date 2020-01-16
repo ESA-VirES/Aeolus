@@ -15,7 +15,8 @@ PG_DATA_DIR="${VIRES_PGDATA_DIR:-$PG_DATA_DIR_DEFAULT}"
 #======================================================================
 
 # STEP 1: INSTALL RPM PACKAGES
-yum --assumeyes install postgresql postgresql-server postgis python-psycopg2
+yum --assumeyes install postgresql postgresql-server postgis postgresql-devel python-devel
+pip install psycopg2
 
 # STEP 2: Shut-down the postgress if already installed and running.
 if [ -n "`systemctl | grep postgresql.service`" ]

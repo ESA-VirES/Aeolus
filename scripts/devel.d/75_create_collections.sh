@@ -22,7 +22,7 @@ MNGCMD="${INSTROOT}/${INSTANCE}/manage.py"
 
 RANGETYPE_FILE="/usr/local/aeolus/aeolus/data/range_types.json"
 
-sudo -u "$VIRES_USER" python "$MNGCMD" eoxs_rangetype_load -i "${RANGETYPE_FILE}"
+sudo -u "$VIRES_USER" python "$MNGCMD" coveragetype import "${RANGETYPE_FILE}"
 
 declare -A COLLECTION_TO_RANGETYPE
 COLLECTION_TO_RANGETYPE=(

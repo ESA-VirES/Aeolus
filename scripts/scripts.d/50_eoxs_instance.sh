@@ -452,10 +452,11 @@ END
     # extending the EOxServer urls.py
     sudo -u "$VIRES_USER" echo "
 from aeolus.views import upload_user_file
+from django.conf.urls import url
 
-urlpatterns += patterns('',
-    (r'^upload/$', upload_user_file),
-)
+urlpatterns += [
+    url(r'^upload/$', upload_user_file),
+]
 " >> "$URLS"
 
 fi # end of AEOLUS configuration
@@ -596,7 +597,7 @@ END
 
 # Remove original url patterns
 { sudo -u "$VIRES_USER" ex "$URLS" || /bin/true ; } <<END
-/^urlpatterns = patterns(/,/^)/s/^\\s/# /
+/^urlpatterns = url(/,/^)/s/^\\s/# /
 wq
 END
 
@@ -607,7 +608,7 @@ $ a
 import eoxs_allauth.views
 from django.views.generic import TemplateView
 
-urlpatterns += patterns('',
+urlpatterns += [
     url(r'^/?$', eoxs_allauth.views.workspace),
     url(r'^ows$', eoxs_allauth.views.wrapped_ows),
     url(r'^accounts/', include('eoxs_allauth.urls')),
@@ -626,7 +627,7 @@ urlpatterns += patterns('',
          TemplateView.as_view(template_name='account/servicetc.html'),
         name='servicetc'
     ),
-)
+]
 # ALLAUTH URLS - END - Do not edit or remove this line!
 .
 wq

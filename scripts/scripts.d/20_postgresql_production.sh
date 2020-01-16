@@ -13,4 +13,5 @@ info "Thus only installing some packages."
 
 #======================================================================
 
-yum --assumeyes install python-psycopg2
+yum --assumeyes install postgresql-devel
+pip install psycopg2
