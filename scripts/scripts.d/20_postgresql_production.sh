@@ -13,4 +13,4 @@ info "Thus only installing some packages."
 
 #======================================================================
 
-yum --assumeyes install python-psycopg2
+yum --assumeyes install python3-psycopg2

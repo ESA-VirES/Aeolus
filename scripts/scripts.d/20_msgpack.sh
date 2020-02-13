@@ -10,4 +10,4 @@
 
 info "Installing messagepack ..."
 
-pip install msgpack-python
+pip install python36-msgpack

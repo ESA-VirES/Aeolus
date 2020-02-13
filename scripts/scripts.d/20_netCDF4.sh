@@ -10,4 +10,4 @@
 
 info "Installing netCDF4 ..."
 
-yum install --assumeyes netcdf4-python
+yum install --assumeyes python36-netcdf4
