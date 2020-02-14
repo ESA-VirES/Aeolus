@@ -25,5 +25,5 @@ pushd .
 cd $EOXS_DEV_PATH
 [ ! -d build/ ] || rm -fvR build/
 [ ! -d dist/ ] || rm -fvR dist/
-python ./setup.py install
+python3 ./setup.py install
 popd

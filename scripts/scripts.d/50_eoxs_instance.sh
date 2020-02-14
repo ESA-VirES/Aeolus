@@ -640,9 +640,9 @@ sudo -u "$VIRES_USER" ex "$SETTINGS" <<END
 /^)/
 a
 # REQUESTLOGGING APPS - BEGIN - Do not edit or remove this line!
-INSTALLED_APPS += (
-    'django_requestlogging',
-)
+#INSTALLED_APPS += (
+#    'django_requestlogging',
+#)
 # REQUESTLOGGING APPS - END - Do not edit or remove this line!
 .
 /^MIDDLEWARE_CLASSES\s*=/
@@ -658,6 +658,27 @@ MIDDLEWARE_CLASSES += (
 wq
 END
 # end of REQUESTLOGGER configuration
+
+
+echo "
+# process settings
+from eoxserver.services.ows.wps.config import DEFAULT_EOXS_PROCESSES
+EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
+    'aeolus.processes.aux.Level1BAUXISRExtract',
+    'aeolus.processes.aux.Level1BAUXMRCExtract',
+    'aeolus.processes.aux.Level1BAUXRRCExtract',
+    'aeolus.processes.aux.Level1BAUXZWCExtract',
+    'aeolus.processes.aux_met.AUXMET12Extract',
+    'aeolus.processes.dsd.DSDExtract',
+    'aeolus.processes.level_1b.Level1BExtract',
+    'aeolus.processes.level_2a.Level2AExtract',
+    'aeolus.processes.level_2b.Level2BExtract',
+    'aeolus.processes.level_2c.Level2CExtract',
+    'aeolus.processes.raw_download.RawDownloadProcess',
+    'aeolus.processes.remove_job.RemoveJob',
+]
+" >> "$SETTINGS"
+
 
 
 # WPS-ASYNC CONFIGURATION
