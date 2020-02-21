@@ -110,9 +110,8 @@ then
 fi
 
 # create new users
-sudo -u postgres psql -q -c "CREATE USER $DBUSER WITH ENCRYPTED PASSWORD '$DBPASSWD' NOSUPERUSER NOCREATEDB NOCREATEROLE ;"
+sudo -u postgres psql -q -c "CREATE USER $DBUSER WITH ENCRYPTED PASSWORD '$DBPASSWD' SUPERUSER NOCREATEDB NOCREATEROLE ;"
 sudo -u postgres psql -q -c "CREATE DATABASE $DBNAME WITH OWNER $DBUSER ENCODING 'UTF-8' ;"
-sudo -u postgres psql -q -d "$DBNAME" -c "CREATE EXTENSION postgis;"
 
 # prepend to the beginning of the acess list
 { sudo -u postgres ex "$PG_HBA" || /bin/true ; } <<END
@@ -125,6 +124,8 @@ local	$DBNAME	all	reject
 .
 wq
 END
+
+echo "$DBPASSWD" | sudo -u postgres psql -q -d "$DBNAME" -U "$DBUSER" -W -c "CREATE EXTENSION postgis;"
 
 systemctl restart postgresql-10.service
 systemctl status postgresql-10.service
