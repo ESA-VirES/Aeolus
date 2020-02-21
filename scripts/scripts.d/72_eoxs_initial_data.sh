@@ -7,6 +7,9 @@ INSTANCE="`basename "$VIRES_SERVER_HOME"`"
 INSTROOT="`dirname "$VIRES_SERVER_HOME"`"
 MNGCMD="${INSTROOT}/${INSTANCE}/manage.py"
 
+# initial permission setup
+sudo -u "$VIRES_USER" python3 "$MNGCMD" aeolus_initialize_permissions
+
 # create initial collections
 for product_type in ALD_U_N_1B ALD_U_N_2A ALD_U_N_2B ALD_U_N_2C AUX_ISR_1B AUX_MET_12 AUX_MRC_1B AUX_RRC_1B AUX_ZWC_1B ; do
     sudo -u "$VIRES_USER" python3 "$MNGCMD" producttype create ${product_type}
