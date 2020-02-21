@@ -10,4 +10,4 @@
 
 info "Installing coda ..."
 
-yum --assumeyes install coda coda-python
+yum --assumeyes install coda coda-python3

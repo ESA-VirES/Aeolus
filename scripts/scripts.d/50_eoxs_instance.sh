@@ -84,13 +84,13 @@ fi
 #      package is not available? First check that the 'eoxserver' tree is
 #      readable by anyone. (E.g. in case of read protected home directory when
 #      the development setup is used.)
-sudo -u "$VIRES_USER" python -c 'import eoxserver' || {
+sudo -u "$VIRES_USER" python3 -c 'import eoxserver' || {
     error "EOxServer does not seem to be installed!"
     exit 1
 }
 
 sudo -u "$VIRES_USER" mkdir -p "$INSTROOT/$INSTANCE"
-sudo -u "$VIRES_USER" eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
+sudo -u "$VIRES_USER" /usr/local/bin/eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
 
 #-------------------------------------------------------------------------------
 # STEP 2: CREATE POSTGRES DATABASE
@@ -111,7 +111,8 @@ fi
 
 # create new users
 sudo -u postgres psql -q -c "CREATE USER $DBUSER WITH ENCRYPTED PASSWORD '$DBPASSWD' NOSUPERUSER NOCREATEDB NOCREATEROLE ;"
-sudo -u postgres psql -q -c "CREATE DATABASE $DBNAME WITH OWNER $DBUSER TEMPLATE template_postgis ENCODING 'UTF-8' ;"
+sudo -u postgres psql -q -c "CREATE DATABASE $DBNAME WITH OWNER $DBUSER ENCODING 'UTF-8' ;"
+sudo -u postgres psql -q -d "$DBNAME" -c "CREATE EXTENSION postgis;"
 
 # prepend to the beginning of the acess list
 { sudo -u postgres ex "$PG_HBA" || /bin/true ; } <<END
@@ -125,22 +126,35 @@ local	$DBNAME	all	reject
 wq
 END
 
-systemctl restart postgresql.service
-systemctl status postgresql.service
+systemctl restart postgresql-10.service
+systemctl status postgresql-10.service
 
 #-------------------------------------------------------------------------------
 # STEP 3: SETUP DJANGO DB BACKEND
 
-sudo -u "$VIRES_USER" ex "$SETTINGS" <<END
-1,\$s/\('ENGINE'[	 ]*:[	 ]*\).*\(,\)/\1'$DBENGINE',/
-1,\$s/\('NAME'[	 ]*:[	 ]*\).*\(,\)/\1'$DBNAME',/
-1,\$s/\('USER'[	 ]*:[	 ]*\).*\(,\)/\1'$DBUSER',/
-1,\$s/\('PASSWORD'[	 ]*:[	 ]*\).*\(,\)/\1'$DBPASSWD',/
-1,\$s/\('HOST'[	 ]*:[	 ]*\).*\(,\)/#\1'$DBHOST',/
-1,\$s/\('PORT'[	 ]*:[	 ]*\).*\(,\)/#\1'$DBPORT',/
-1,\$s:\(STATIC_URL[	 ]*=[	 ]*\).*:\1'$STATIC_URL_PATH/':
-wq
-END
+# sudo -u "$VIRES_USER" ex "$SETTINGS" <<END
+# 1,\$s/\('ENGINE'[	 ]*:[	 ]*\).*\(,\)/\1'$DBENGINE',/
+# 1,\$s/\('NAME'[	 ]*:[	 ]*\).*\(,\)/\1'$DBNAME',/
+# 1,\$s/\('USER'[	 ]*:[	 ]*\).*\(,\)/\1'$DBUSER',/
+# 1,\$s/\('PASSWORD'[	 ]*:[	 ]*\).*\(,\)/\1'$DBPASSWD',/
+# 1,\$s/\('HOST'[	 ]*:[	 ]*\).*\(,\)/#\1'$DBHOST',/
+# 1,\$s/\('PORT'[	 ]*:[	 ]*\).*\(,\)/#\1'$DBPORT',/
+# 1,\$s:\(STATIC_URL[	 ]*=[	 ]*\).*:\1'$STATIC_URL_PATH/':
+# wq
+# END
+
+sudo -u "$VIRES_USER" echo " 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'HOST': '$DBHOST',
+        'PORT': '$DBPORT',
+        'NAME': '$DBNAME',
+        'USER': '$DBUSER',
+        'PASSWORD': '$DBPASSWD',
+    }
+}" >> "$SETTINGS"
+
 
 #-------------------------------------------------------------------------------
 # STEP 4: APACHE WEB SERVER INTEGRATION
@@ -275,9 +289,9 @@ LOGGING = {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
         },
-        'request_filter': {
-            '()': 'django_requestlogging.logging_filters.RequestFilter'
-        },
+        # 'request_filter': {
+        #     '()': 'django_requestlogging.logging_filters.RequestFilter'
+        # },
     },
     'formatters': {
         'default': {
@@ -302,7 +316,7 @@ LOGGING = {
             'class': 'logging.handlers.WatchedFileHandler',
             'filename': '${ACCESSLOG}',
             'formatter': 'access',
-            'filters': ['request_filter'],
+            # 'filters': ['request_filter'],
         },
         'stderr_stream': {
             'level': 'INFO',
@@ -453,9 +467,9 @@ END
     sudo -u "$VIRES_USER" echo "
 from aeolus.views import upload_user_file
 
-urlpatterns += patterns('',
-    (r'^upload/$', upload_user_file),
-)
+urlpatterns += [
+    re_path(r'^upload/$', upload_user_file),
+]
 " >> "$URLS"
 
 fi # end of AEOLUS configuration
@@ -650,9 +664,13 @@ a
 # REQUESTLOGGING MIDDLEWARE_CLASSES - BEGIN - Do not edit or remove this line!
 
 # request logger specific middleware classes
-MIDDLEWARE_CLASSES += (
-    'django_requestlogging.middleware.LogSetupMiddleware',
-)
+# MIDDLEWARE_CLASSES += (
+#     'django_requestlogging.middleware.LogSetupMiddleware',
+# )
+
+# MIDDLEWARE += (
+#     'request_logging.middleware.LoggingMiddleware',
+# )
 # REQUESTLOGGING MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
 .
 wq
@@ -796,41 +814,28 @@ fi # end of WPS-ASYNC configuration
 info "Initializing EOxServer instance '${INSTANCE}' ..."
 
 # collect static files
-sudo -u "$VIRES_USER" python "$MNGCMD" collectstatic -l --noinput
+sudo -u "$VIRES_USER" python3 "$MNGCMD" collectstatic -l --noinput
 
 # setup new database
-#sudo -u "$VIRES_USER" python "$MNGCMD" makemigrations
+#sudo -u "$VIRES_USER" python3 "$MNGCMD" makemigrations
 # NOTE: Django 1.8 'makemigrations' does not seem to properly initialize
 #       new migrations and the command has to be called for each app separately.
 #       See: http://stackoverflow.com/questions/29689365/auth-user-error-with-django-1-8-and-syncdb-migrate
 {
-python - << END
+python3 - << END
 import sys
 sys.path.append("$INSTROOT/$INSTANCE")
 import ${INSTANCE}.settings as settings
 for app in settings.INSTALLED_APPS:
-    print app.rpartition('.')[-1]
+    print(app.rpartition('.')[-1])
 END
 } | while read APP
 do
-    python "$MNGCMD" makemigrations "$APP"
+    python3 "$MNGCMD" makemigrations "$APP"
 done
-sudo -u "$VIRES_USER" python "$MNGCMD" migrate
+sudo -u "$VIRES_USER" python3 "$MNGCMD" migrate
 
 #-------------------------------------------------------------------------------
-# STEP 8: APP-SPECIFIC INITIALISATION
-
-if [ "$CONFIGURE_VIRES" == "YES" ]
-then
-    # load rangetypes
-    sudo -u "$VIRES_USER" python "$MNGCMD" vires_rangetype_load || true
-
-    # register models
-    sudo -u "$VIRES_USER" python "$MNGCMD" vires_model_remove --all
-    sudo -u "$VIRES_USER" python "$MNGCMD" vires_model_add "SIFM" "IGRF12" "CHAOS-5-Combined"
-fi
-
-#-------------------------------------------------------------------------------
-# STEP 9: FINAL WEB SERVER RESTART
+# STEP 8: FINAL WEB SERVER RESTART
 systemctl restart httpd.service
 systemctl status httpd.service

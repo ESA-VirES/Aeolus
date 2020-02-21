@@ -15,10 +15,14 @@ After=network.target
 User=$VIRES_USER
 Group=$VIRES_GROUP
 WorkingDirectory=$VIRES_SERVER_HOME
-ExecStart=gunicorn --workers $EOXS_WSGI_NPROC --bind unix:$GUNICORN_SOCKET eoxs.wsgi:application
+ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --bind unix:$GUNICORN_SOCKET eoxs.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
 " > /etc/systemd/system/gunicorn.service
 
-# TODO: create gunicorn service file
+service gunicorn start
+service gunicorn status
+
+
+systemctl status gunicorn.service

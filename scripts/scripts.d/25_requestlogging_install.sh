@@ -8,6 +8,6 @@
 
 . `dirname $0`/../lib_logging.sh
 
-info "Installing django-requestlogging ..."
+info "Installing django-request-logging ..."
 
-pip install --upgrade --no-deps django-requestlogging
+pip3 install --upgrade --no-deps django-request-logging

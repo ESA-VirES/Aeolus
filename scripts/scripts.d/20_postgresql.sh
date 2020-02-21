@@ -14,8 +14,10 @@ PG_DATA_DIR_DEFAULT="/var/lib/pgsql/data"
 PG_DATA_DIR="${VIRES_PGDATA_DIR:-$PG_DATA_DIR_DEFAULT}"
 #======================================================================
 
+yum install --assumeyes postgresql10 postgresql10-server postgis2_10 python3-psycopg2
+
 # STEP 1: INSTALL RPM PACKAGES
-yum --assumeyes install postgresql postgresql-server postgis python3-psycopg2
+# yum --assumeyes install postgresql postgresql-server postgis python3-psycopg2
 
 # STEP 2: Shut-down the postgress if already installed and running.
 if [ -n "`systemctl | grep postgresql.service`" ]
@@ -40,11 +42,17 @@ systemctl daemon-reload
 # STEP 4: INIT THE DB AND START THE SERVICE
 info "New database initialisation ... "
 
-postgresql-setup initdb
-systemctl disable postgresql.service # DO NOT REMOVE!
-systemctl enable postgresql.service
-systemctl start postgresql.service
-systemctl status postgresql.service
+# postgresql-setup initdb
+# systemctl disable postgresql.service # DO NOT REMOVE!
+# systemctl enable postgresql.service
+# systemctl start postgresql.service
+# systemctl status postgresql.service
+
+/usr/pgsql-10/bin/postgresql-10-setup initdb
+systemctl disable postgresql-10.service # DO NOT REMOVE!
+systemctl enable postgresql-10.service
+systemctl start postgresql-10.service
+systemctl status postgresql-10.service
 
 # STEP 5: SETUP POSTGIS DATABASE TEMPLATE
 if [ -z "`sudo -u postgres psql --list | grep template_postgis`" ]

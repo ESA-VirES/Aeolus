@@ -10,4 +10,4 @@
 
 info "Installing messagepack ..."
 
-pip install python36-msgpack
+yum --assumeyes install python36-msgpack
