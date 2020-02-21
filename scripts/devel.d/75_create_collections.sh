@@ -1,1 +1,0 @@
-../scripts.d/75_create_collections.sh
