@@ -20,7 +20,7 @@ yum --assumeyes install install epel-release
 rpm -q --quiet eox-release || rpm -Uvh http://yum.packages.eox.at/el/eox-release-7-0.noarch.rpm
 
 # for postgresql > 9.2
-yum install --assumeyes https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+rpm -q --quiet pgdg-redhat-repo || rpm -Uvh https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 
 #info "Enabling EOX testing repository for explicitly listed packages ..."
 #
