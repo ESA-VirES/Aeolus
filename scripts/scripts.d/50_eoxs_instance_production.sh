@@ -94,7 +94,7 @@ info "Creating EOxServer instance '${INSTANCE}' in '$INSTROOT/$INSTANCE' ..."
 #      package is not available? First check that the 'eoxserver' tree is
 #      readable by anyone. (E.g. in case of read protected home directory when
 #      the development setup is used.)
-python -c 'import eoxserver' || {
+python3 -c 'import eoxserver' || {
     error "EOxServer does not seem to be installed!"
     exit 1
 }
@@ -102,7 +102,7 @@ python -c 'import eoxserver' || {
 if [ ! -d "$INSTROOT/$INSTANCE" ]
 then
     mkdir -p "$INSTROOT/$INSTANCE"
-    eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
+    sudo -u "$VIRES_USER" /usr/local/bin/eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
 fi
 
 #-------------------------------------------------------------------------------
@@ -413,15 +413,6 @@ then
 else
     info "AEOLUS specific configuration ..."
 
-    # remove unnecessary or conflicting component paths
-    { ex "$SETTINGS" || /bin/true ; } <<END
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.ows\.wcs\.\*\*'/#&/
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.native\.\*\*'/#&/
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.gdal\.\*\*'/#&/
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.mapserver\.\*\*'/#&/
-wq
-END
-
     # extending the EOxServer settings.py
     ex "$SETTINGS" <<END
 /^INSTALLED_APPS\s*=/
@@ -436,12 +427,7 @@ INSTALLED_APPS += (
 /^COMPONENTS\s*=/
 /^)/a
 # AEOLUS COMPONENTS - BEGIN - Do not edit or remove this line!
-COMPONENTS += (
-    #'eoxserver.services.mapserver.wms.*',
-    'aeolus.processes.*',
-    'aeolus.mapserver.**',
-    'eoxserver.services.mapserver.wms.*',
-)
+
 # AEOLUS COMPONENTS - END - Do not edit or remove this line!
 .
 \$a
@@ -455,6 +441,27 @@ LOGGING['loggers']['aeolus'] = {
 .
 wq
 END
+
+
+echo "
+# process settings
+from eoxserver.services.ows.wps.config import DEFAULT_EOXS_PROCESSES
+EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
+    'aeolus.processes.aux.Level1BAUXISRExtract',
+    'aeolus.processes.aux.Level1BAUXMRCExtract',
+    'aeolus.processes.aux.Level1BAUXRRCExtract',
+    'aeolus.processes.aux.Level1BAUXZWCExtract',
+    'aeolus.processes.aux_met.AUXMET12Extract',
+    'aeolus.processes.dsd.DSDExtract',
+    'aeolus.processes.level_1b.Level1BExtract',
+    'aeolus.processes.level_2a.Level2AExtract',
+    'aeolus.processes.level_2b.Level2BExtract',
+    'aeolus.processes.level_2c.Level2CExtract',
+    'aeolus.processes.raw_download.RawDownloadProcess',
+    'aeolus.processes.remove_job.RemoveJob',
+]
+" >> "$SETTINGS"
+
 
 fi # end of AEOLUS configuration
 
@@ -588,26 +595,26 @@ $ a
 import eoxs_allauth.views
 from django.views.generic import TemplateView
 
-urlpatterns += patterns('',
-    url(r'^/?$', eoxs_allauth.views.workspace),
-    url(r'^ows$', eoxs_allauth.views.wrapped_ows),
-    url(r'^accounts/', include('eoxs_allauth.urls')),
-    url(
+urlpatterns += [
+    re_path(r'^/?$', eoxs_allauth.views.workspace),
+    re_path(r'^ows$', eoxs_allauth.views.wrapped_ows),
+    re_path(r'^accounts/', include('eoxs_allauth.urls')),
+    re_path(
         r'^accounts/faq$',
         TemplateView.as_view(template_name='account/faq.html'),
         name='faq'
     ),
-    url(
+    re_path(
         r'^accounts/datatc$',
         TemplateView.as_view(template_name='account/datatc.html'),
         name='datatc'
     ),
-    url(
+    re_path(
         r'^accounts/servicetc$',
          TemplateView.as_view(template_name='account/servicetc.html'),
         name='servicetc'
     ),
-)
+]
 # ALLAUTH URLS - END - Do not edit or remove this line!
 .
 wq
@@ -701,10 +708,6 @@ END
 /^COMPONENTS\s*=/
 /^)/a
 # WPSASYNC COMPONENTS - BEGIN - Do not edit or remove this line!
-COMPONENTS += (
-    'eoxs_wps_async.backend',
-    'eoxs_wps_async.processes.**',
-)
 # WPSASYNC COMPONENTS - END - Do not edit or remove this line!
 .
 \$a
@@ -776,24 +779,12 @@ fi # end of WPS-ASYNC configuration
 info "Initializing EOxServer instance '${INSTANCE}' ..."
 
 # collect static files
-python "$MNGCMD" collectstatic -l --noinput
+python3 "$MNGCMD" collectstatic -l --noinput
 
 # setup new database
 # python "$MNGCMD" makemigrations
-python "$MNGCMD" migrate
+python3 "$MNGCMD" migrate
 
-#-------------------------------------------------------------------------------
-# STEP 8: APP-SPECIFIC INITIALISATION
-
-if [ "$CONFIGURE_VIRES" == "YES" ]
-then
-    # load rangetypes
-    python "$MNGCMD" vires_rangetype_load || true
-
-    # register models
-    python "$MNGCMD" vires_model_remove --all
-#    python "$MNGCMD" vires_model_add ""
-fi
 
 #-------------------------------------------------------------------------------
 # STEP 9: CHANGE OWNERSHIP OF THE CONFIGURATION FILES
