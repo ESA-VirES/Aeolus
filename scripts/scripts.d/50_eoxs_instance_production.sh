@@ -101,7 +101,7 @@ python3 -c 'import eoxserver' || {
 
 if [ ! -d "$INSTROOT/$INSTANCE" ]
 then
-    mkdir -p "$INSTROOT/$INSTANCE"
+    sudo -u "$VIRES_USER" mkdir -p "$INSTROOT/$INSTANCE"
     sudo -u "$VIRES_USER" /usr/local/bin/eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
 fi
 
@@ -112,6 +112,8 @@ fi
 
 #-------------------------------------------------------------------------------
 # STEP 3: SETUP DJANGO DB BACKEND
+
+info "Connecting DB backend for '${INSTANCE}' in '${SETTINGS}' ..."
 
 ex "$SETTINGS" <<END
 1,\$s/\('ENGINE'[	 ]*:[	 ]*\).*\(,\)/\1'$DBENGINE',/
