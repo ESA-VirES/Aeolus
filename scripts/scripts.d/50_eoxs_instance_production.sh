@@ -126,9 +126,20 @@ info "Connecting DB backend for '${INSTANCE}' in '${SETTINGS}' ..."
 # wq
 # END
 
-# TODO: don't repeat this
 
-sudo -u "$VIRES_USER" echo " 
+{ ex "$EOXSCONF" || /bin/true ; } <<END
+/^# DATABASE - BEGIN/,/^# DATABASE - END/d
+wq
+END
+
+# extending the EOxServer settings.py
+ex "$SETTINGS" <<END
+/^db_type\s*=/
+/)/
+a
+
+# DATABASE APPS - BEGIN - Do not edit or remove this line!
+db_type = None
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -138,7 +149,11 @@ DATABASES = {
         'USER': '$DBUSER',
         'PASSWORD': '$DBPASSWD',
     }
-}" >> "$SETTINGS"
+}
+# DATABASE LOGGING - END - Do not edit or remove this line!
+.
+wq
+END
 
 #-------------------------------------------------------------------------------
 # STEP 4: APACHE WEB SERVER INTEGRATION
@@ -299,7 +314,7 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         },
         'request_filter': {
-            '()': 'django_requestlogging.logging_filters.RequestFilter'
+            # '()': 'django_requestlogging.logging_filters.RequestFilter'
         },
     },
     'formatters': {
@@ -666,7 +681,7 @@ ex "$SETTINGS" <<END
 a
 # REQUESTLOGGING APPS - BEGIN - Do not edit or remove this line!
 INSTALLED_APPS += (
-    'django_requestlogging',
+    # 'django_requestlogging',
 )
 # REQUESTLOGGING APPS - END - Do not edit or remove this line!
 .
