@@ -135,9 +135,7 @@ END
 # extending the EOxServer settings.py
 ex "$SETTINGS" <<END
 /^db_type\s*=/
-/)/
 a
-
 # DATABASE APPS - BEGIN - Do not edit or remove this line!
 db_type = None
 DATABASES = {
