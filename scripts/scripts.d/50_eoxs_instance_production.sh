@@ -588,7 +588,7 @@ OWS11_EXCEPTION_XSL = join(STATIC_URL, "other/owserrorstyle.xsl")
 
 # Disabled registration
 REGISTRATION_OPEN = True
-ACCOUNT_ADAPTER = 'eoxs_allauth.apps.NoNewUsersAccountAdapter'
+ACCOUNT_ADAPTER = 'eoxs_allauth.adapter.NoNewUsersAccountAdapter'
 
 # ALLAUTH MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
 .
@@ -808,11 +808,11 @@ fi # end of WPS-ASYNC configuration
 info "Initializing EOxServer instance '${INSTANCE}' ..."
 
 # collect static files
-python3 "$MNGCMD" collectstatic -l --noinput
+sudo -u "$VIRES_USER" python3 "$MNGCMD" collectstatic -l --noinput
 
 # setup new database
 # python "$MNGCMD" makemigrations
-python3 "$MNGCMD" migrate
+sudo -u "$VIRES_USER" python3 "$MNGCMD" migrate
 
 
 #-------------------------------------------------------------------------------
