@@ -232,7 +232,8 @@ site.addsitedir("${ENABLE_VIRTUALENV}/local/lib/python2.7/site-packages")
 /^os.environ/a
 # Start activate virtualenv
 activate_env=os.path.expanduser("${ENABLE_VIRTUALENV}/bin/activate_this.py")
-execfile(activate_env, dict(__file__=activate_env))
+exec(open(activate_env).read(), dict(__file__=activate_env))
+
 # End activate virtualenv
 .
 wq
