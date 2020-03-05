@@ -115,18 +115,6 @@ fi
 
 info "Connecting DB backend for '${INSTANCE}' in '${SETTINGS}' ..."
 
-# ex "$SETTINGS" <<END
-# 1,\$s/\('ENGINE'[	 ]*:[	 ]*\).*\(,\)/\1'$DBENGINE',/
-# 1,\$s/\('NAME'[	 ]*:[	 ]*\).*\(,\)/\1'$DBNAME',/
-# 1,\$s/\('USER'[	 ]*:[	 ]*\).*\(,\)/\1'$DBUSER',/
-# 1,\$s/\('PASSWORD'[	 ]*:[	 ]*\).*\(,\)/\1'$DBPASSWD',/
-# 1,\$s/\('HOST'[	 ]*:[	 ]*\).*\(,\)/\1'$DBHOST',/
-# 1,\$s/\('PORT'[	 ]*:[	 ]*\).*\(,\)/\1'$DBPORT',/
-# 1,\$s:\(STATIC_URL[	 ]*=[	 ]*\).*:\1'$STATIC_URL_PATH/':
-# wq
-# END
-
-
 { ex "$EOXSCONF" || /bin/true ; } <<END
 /^# DATABASE - BEGIN/,/^# DATABASE - END/d
 wq
@@ -153,6 +141,32 @@ DATABASES = {
 wq
 END
 
+
+#-------------------------------------------------------------------------------
+# STEP 4.x: GUNICORN WEB SERVER INTEGRATION
+
+
+info "Creating gunicorn service"
+
+echo "[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=$VIRES_USER
+Group=$VIRES_GROUP
+WorkingDirectory=$VIRES_SERVER_HOME
+ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --bind http://127.0.0.1:8012 --chdir ${INSTROOT}/${INSTANCE} ${INSTANCE}.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+" > /etc/systemd/system/gunicorn.service
+
+service gunicorn start
+service gunicorn status
+
+systemctl status gunicorn.service
+
 #-------------------------------------------------------------------------------
 # STEP 4: APACHE WEB SERVER INTEGRATION
 
@@ -175,22 +189,25 @@ do
 
     # static content
     Alias "$STATIC_URL_PATH" "$INSTSTAT_DIR"
+    ProxyPass "$STATIC_URL_PATH" !
     <Directory "$INSTSTAT_DIR">
         Options -MultiViews +FollowSymLinks
         Header set Access-Control-Allow-Origin "*"
     </Directory>
 
+    ProxyPass "/" "http://127.0.0.1:8012/"
+
     # WSGI service endpoint
-    WSGIScriptAlias "${BASE_URL_PATH:-/}" "${INSTROOT}/${INSTANCE}/${INSTANCE}/wsgi.py"
-    <Directory "${INSTROOT}/${INSTANCE}/${INSTANCE}">
-        <Files "wsgi.py">
-            WSGIProcessGroup $EOXS_WSGI_PROCESS_GROUP
-            WSGIApplicationGroup %{GLOBAL}
-            Header set Access-Control-Allow-Origin "*"
-            Header set Access-Control-Allow-Headers Content-Type
-            Header set Access-Control-Allow-Methods "POST, GET"
-        </Files>
-    </Directory>
+    # WSGIScriptAlias "${BASE_URL_PATH:-/}" "${INSTROOT}/${INSTANCE}/${INSTANCE}/wsgi.py"
+    # <Directory "${INSTROOT}/${INSTANCE}/${INSTANCE}">
+    #     <Files "wsgi.py">
+    #         WSGIProcessGroup $EOXS_WSGI_PROCESS_GROUP
+    #         WSGIApplicationGroup %{GLOBAL}
+    #         Header set Access-Control-Allow-Origin "*"
+    #         Header set Access-Control-Allow-Headers Content-Type
+    #         Header set Access-Control-Allow-Methods "POST, GET"
+    #     </Files>
+    # </Directory>
 
     # EOXS00_END - EOxServer instance - Do not edit or remove this line!
 .
@@ -412,6 +429,7 @@ info "Application specific configuration ..."
 { ex "$SETTINGS" || /bin/true ; } <<END
 /^# AEOLUS APPS - BEGIN/,/^# AEOLUS APPS - END/d
 /^# AEOLUS COMPONENTS - BEGIN/,/^# AEOLUS COMPONENTS - END/d
+/^# AEOLUS PROCESSES - BEGIN/,/^# AEOLUS PROCESSES - END/d
 /^# AEOLUS LOGGING - BEGIN/,/^# AEOLUS LOGGING - END/d
 /^# WPSASYNC COMPONENTS - BEGIN/,/^# WPSASYNC COMPONENTS - END/d
 /^# WPSASYNC LOGGING - BEGIN/,/^# WPSASYNC LOGGING - END/d
@@ -455,9 +473,23 @@ INSTALLED_APPS += (
 .
 /^COMPONENTS\s*=/
 /^)/a
-# AEOLUS COMPONENTS - BEGIN - Do not edit or remove this line!
-
-# AEOLUS COMPONENTS - END - Do not edit or remove this line!
+# AEOLUS PROCESSES - BEGIN - Do not edit or remove this line!
+from eoxserver.services.ows.wps.config import DEFAULT_EOXS_PROCESSES
+EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
+    'aeolus.processes.aux.Level1BAUXISRExtract',
+    'aeolus.processes.aux.Level1BAUXMRCExtract',
+    'aeolus.processes.aux.Level1BAUXRRCExtract',
+    'aeolus.processes.aux.Level1BAUXZWCExtract',
+    'aeolus.processes.aux_met.AUXMET12Extract',
+    'aeolus.processes.dsd.DSDExtract',
+    'aeolus.processes.level_1b.Level1BExtract',
+    'aeolus.processes.level_2a.Level2AExtract',
+    'aeolus.processes.level_2b.Level2BExtract',
+    'aeolus.processes.level_2c.Level2CExtract',
+    'aeolus.processes.raw_download.RawDownloadProcess',
+    'aeolus.processes.remove_job.RemoveJob',
+]
+# AEOLUS PROCESSES - END - Do not edit or remove this line!
 .
 \$a
 # AEOLUS LOGGING - BEGIN - Do not edit or remove this line!
@@ -474,21 +506,6 @@ END
 
 echo "
 # process settings
-from eoxserver.services.ows.wps.config import DEFAULT_EOXS_PROCESSES
-EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
-    'aeolus.processes.aux.Level1BAUXISRExtract',
-    'aeolus.processes.aux.Level1BAUXMRCExtract',
-    'aeolus.processes.aux.Level1BAUXRRCExtract',
-    'aeolus.processes.aux.Level1BAUXZWCExtract',
-    'aeolus.processes.aux_met.AUXMET12Extract',
-    'aeolus.processes.dsd.DSDExtract',
-    'aeolus.processes.level_1b.Level1BExtract',
-    'aeolus.processes.level_2a.Level2AExtract',
-    'aeolus.processes.level_2b.Level2BExtract',
-    'aeolus.processes.level_2c.Level2CExtract',
-    'aeolus.processes.raw_download.RawDownloadProcess',
-    'aeolus.processes.remove_job.RemoveJob',
-]
 " >> "$SETTINGS"
 
 
@@ -720,6 +737,7 @@ else
 
     # WPS static content
     Alias "$VIRES_WPS_URL_PATH" "$VIRES_WPS_PERM_DIR"
+    ProxyPass "$VIRES_WPS_URL_PATH" !
     <Directory "$VIRES_WPS_PERM_DIR">
         EnableSendfile off
         Options -MultiViews +FollowSymLinks
