@@ -156,7 +156,7 @@ After=network.target
 User=$VIRES_USER
 Group=$VIRES_GROUP
 WorkingDirectory=$VIRES_SERVER_HOME
-ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --bind http://127.0.0.1:8012 --chdir ${INSTROOT}/${INSTANCE} ${INSTANCE}.wsgi:application
+ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --bind 127.0.0.1:8012 --chdir ${INSTROOT}/${INSTANCE} ${INSTANCE}.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
