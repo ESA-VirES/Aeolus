@@ -162,6 +162,8 @@ ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --bind 127.0.0.1:80
 WantedBy=multi-user.target
 " > /etc/systemd/system/gunicorn.service
 
+systemctl daemon-reload
+
 service gunicorn start
 service gunicorn status
 
@@ -504,12 +506,6 @@ LOGGING['loggers']['aeolus'] = {
 .
 wq
 END
-
-
-echo "
-# process settings
-" >> "$SETTINGS"
-
 
 fi # end of AEOLUS configuration
 
