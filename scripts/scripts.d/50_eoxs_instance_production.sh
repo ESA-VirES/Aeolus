@@ -124,7 +124,7 @@ END
 ex "$SETTINGS" <<END
 /^db_type\s*=/
 a
-# DATABASE APPS - BEGIN - Do not edit or remove this line!
+# DATABASE - BEGIN - Do not edit or remove this line!
 db_type = None
 DATABASES = {
     'default': {
@@ -136,7 +136,7 @@ DATABASES = {
         'PASSWORD': '$DBPASSWD',
     }
 }
-# DATABASE LOGGING - END - Do not edit or remove this line!
+# DATABASE - END - Do not edit or remove this line!
 .
 wq
 END
