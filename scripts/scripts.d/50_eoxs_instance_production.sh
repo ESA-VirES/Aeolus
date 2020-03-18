@@ -115,7 +115,7 @@ fi
 
 info "Connecting DB backend for '${INSTANCE}' in '${SETTINGS}' ..."
 
-{ ex "$EOXSCONF" || /bin/true ; } <<END
+{ ex "$SETTINGS" || /bin/true ; } <<END
 /^# DATABASE - BEGIN/,/^# DATABASE - END/d
 wq
 END
