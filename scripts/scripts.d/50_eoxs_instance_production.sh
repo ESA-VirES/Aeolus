@@ -164,10 +164,9 @@ WantedBy=multi-user.target
 
 systemctl daemon-reload
 
-service gunicorn start
-service gunicorn status
-
-systemctl status gunicorn.service
+systemctl enable "gunicorn.service"
+systemctl restart "gunicorn.service"
+systemctl status "gunicorn.service"
 
 #-------------------------------------------------------------------------------
 # STEP 4: APACHE WEB SERVER INTEGRATION
