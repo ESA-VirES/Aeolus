@@ -639,7 +639,7 @@ import eoxs_allauth.views
 from django.views.generic import TemplateView
 
 urlpatterns += [
-    re_path(r'^/?$', eoxs_allauth.views.workspace),
+    re_path(r'^$', eoxs_allauth.views.workspace),
     re_path(r'^ows$', eoxs_allauth.views.wrapped_ows),
     re_path(r'^accounts/', include('eoxs_allauth.urls')),
     re_path(
