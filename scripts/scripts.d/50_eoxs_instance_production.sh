@@ -491,6 +491,11 @@ EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
     'aeolus.processes.level_2c.Level2CExtract',
     'aeolus.processes.raw_download.RawDownloadProcess',
     'aeolus.processes.remove_job.RemoveJob',
+    'aeolus.processes.list_jobs.ListJobs',
+]
+AEOLUS_OPTIMIZED_DIR = '/mnt/data/optimized'
+EOXS_ASYNC_BACKENDS = [
+    'eoxs_wps_async.backend.WPSAsyncBackendBase',
 ]
 # AEOLUS PROCESSES - END - Do not edit or remove this line!
 .
