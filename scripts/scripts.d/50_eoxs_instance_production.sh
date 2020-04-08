@@ -813,7 +813,7 @@ Before=httpd.service
 Type=simple
 User=$VIRES_USER
 ExecStartPre=/usr/bin/rm -fv $VIRES_WPS_SOCKET
-ExecStart=${ENABLE_VIRTUALENV:-/usr}/bin/python -EsOm eoxs_wps_async.daemon ${INSTANCE}.settings $INSTROOT/$INSTANCE
+ExecStart=${ENABLE_VIRTUALENV:-/usr}/bin/python3 -EOm eoxs_wps_async.daemon ${INSTANCE}.settings $INSTROOT/$INSTANCE
 
 [Install]
 WantedBy=multi-user.target
