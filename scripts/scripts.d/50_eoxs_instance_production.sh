@@ -734,7 +734,7 @@ else
     do
         { ex "$CONF" || /bin/true ; } <<END
 /EOXS01_BEGIN/,/EOXS01_END/de
-/^[ 	]*<\/VirtualHost>/i
+/^[ 	]*<\/Location>/i
     # EOXS01_BEGIN - EOxServer instance - Do not edit or remove this line!
 
     # WPS static content
