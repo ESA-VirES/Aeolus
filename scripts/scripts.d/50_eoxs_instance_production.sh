@@ -156,7 +156,7 @@ After=network.target
 User=$VIRES_USER
 Group=$VIRES_GROUP
 WorkingDirectory=$VIRES_SERVER_HOME
-ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --bind 127.0.0.1:8012 --chdir ${INSTROOT}/${INSTANCE} ${INSTANCE}.wsgi:application
+ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --timeout 600 --bind 127.0.0.1:8012 --chdir ${INSTROOT}/${INSTANCE} ${INSTANCE}.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -196,19 +196,7 @@ do
         Header set Access-Control-Allow-Origin "*"
     </Directory>
 
-    ProxyPass "/" "http://127.0.0.1:8012/"
-
-    # WSGI service endpoint
-    # WSGIScriptAlias "${BASE_URL_PATH:-/}" "${INSTROOT}/${INSTANCE}/${INSTANCE}/wsgi.py"
-    # <Directory "${INSTROOT}/${INSTANCE}/${INSTANCE}">
-    #     <Files "wsgi.py">
-    #         WSGIProcessGroup $EOXS_WSGI_PROCESS_GROUP
-    #         WSGIApplicationGroup %{GLOBAL}
-    #         Header set Access-Control-Allow-Origin "*"
-    #         Header set Access-Control-Allow-Headers Content-Type
-    #         Header set Access-Control-Allow-Methods "POST, GET"
-    #     </Files>
-    # </Directory>
+    ProxyPass "/" "http://127.0.0.1:8012/" connectiontimeout=60 timeout=600
 
     # EOXS00_END - EOxServer instance - Do not edit or remove this line!
 .
@@ -734,7 +722,7 @@ else
     do
         { ex "$CONF" || /bin/true ; } <<END
 /EOXS01_BEGIN/,/EOXS01_END/de
-/^[ 	]*<\/Location>/i
+/^[ 	]*<\/Location>/a
     # EOXS01_BEGIN - EOxServer instance - Do not edit or remove this line!
 
     # WPS static content
