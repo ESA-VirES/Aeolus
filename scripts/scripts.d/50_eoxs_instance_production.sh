@@ -425,10 +425,10 @@ info "Application specific configuration ..."
 /^# WPSASYNC COMPONENTS - BEGIN/,/^# WPSASYNC COMPONENTS - END/d
 /^# WPSASYNC LOGGING - BEGIN/,/^# WPSASYNC LOGGING - END/d
 /^# ALLAUTH APPS - BEGIN/,/^# ALLAUTH APPS - END/d
-/^# ALLAUTH MIDDLEWARE_CLASSES - BEGIN/,/^# ALLAUTH MIDDLEWARE_CLASSES - END/d
+/^# ALLAUTH MIDDLEWARE - BEGIN/,/^# ALLAUTH MIDDLEWARE - END/d
 /^# ALLAUTH LOGGING - BEGIN/,/^# ALLAUTH LOGGING - END/d
 /^# REQUESTLOGGING APPS - BEGIN/,/^# REQUESTLOGGING APPS - END/d
-/^# REQUESTLOGGING MIDDLEWARE_CLASSES - BEGIN/,/^# REQUESTLOGGING MIDDLEWARE_CLASSES - END/d
+/^# REQUESTLOGGING MIDDLEWARE - BEGIN/,/^# REQUESTLOGGING MIDDLEWARE - END/d
 /^# EMAIL_BACKEND - BEGIN/,/^# EMAIL_BACKEND - END/d
 wq
 END
@@ -533,14 +533,14 @@ INSTALLED_APPS += (
 
 # ALLAUTH APPS - END - Do not edit or remove this line!
 .
-/^MIDDLEWARE_CLASSES\s*=/
+/^MIDDLEWARE\s*=/
 /^)/a
-# ALLAUTH MIDDLEWARE_CLASSES - BEGIN - Do not edit or remove this line!
+# ALLAUTH MIDDLEWARE - BEGIN - Do not edit or remove this line!
 
 # allauth specific middleware classes
 MIDDLEWARE += [
-    # 'eoxs_allauth.middleware.InactiveUserLogoutMiddleware',
-    # 'eoxs_allauth.middleware.AccessLoggingMiddleware',
+    'eoxs_allauth.middleware.access_logging_middleware',
+    'eoxs_allauth.middleware.inactive_user_logout_middleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     # SessionAuthenticationMiddleware is only available in django 1.7
     # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
@@ -599,7 +599,7 @@ OWS11_EXCEPTION_XSL = join(STATIC_URL, "other/owserrorstyle.xsl")
 REGISTRATION_OPEN = True
 ACCOUNT_ADAPTER = 'eoxs_allauth.adapter.NoNewUsersAccountAdapter'
 
-# ALLAUTH MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
+# ALLAUTH MIDDLEWARE - END - Do not edit or remove this line!
 .
 \$a
 # ALLAUTH LOGGING - BEGIN - Do not edit or remove this line!
@@ -692,15 +692,15 @@ INSTALLED_APPS += (
 )
 # REQUESTLOGGING APPS - END - Do not edit or remove this line!
 .
-/^MIDDLEWARE_CLASSES\s*=/
+/^MIDDLEWARE\s*=/
 /^)/a
-# REQUESTLOGGING MIDDLEWARE_CLASSES - BEGIN - Do not edit or remove this line!
+# REQUESTLOGGING MIDDLEWARE - BEGIN - Do not edit or remove this line!
 
 # request logger specific middleware classes
-#MIDDLEWARE_CLASSES += (
+#MIDDLEWARE += [
 #    'django_requestlogging.middleware.LogSetupMiddleware',
-#)
-# REQUESTLOGGING MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
+#]
+# REQUESTLOGGING MIDDLEWARE - END - Do not edit or remove this line!
 .
 wq
 END
