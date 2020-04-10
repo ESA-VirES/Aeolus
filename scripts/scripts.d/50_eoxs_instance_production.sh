@@ -538,19 +538,19 @@ INSTALLED_APPS += (
 # ALLAUTH MIDDLEWARE_CLASSES - BEGIN - Do not edit or remove this line!
 
 # allauth specific middleware classes
-MIDDLEWARE_CLASSES += (
-    'eoxs_allauth.middleware.InactiveUserLogoutMiddleware',
-    'eoxs_allauth.middleware.AccessLoggingMiddleware',
+MIDDLEWARE += [
+    # 'eoxs_allauth.middleware.InactiveUserLogoutMiddleware',
+    # 'eoxs_allauth.middleware.AccessLoggingMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     # SessionAuthenticationMiddleware is only available in django 1.7
     # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
 # VirES Specific middleware classes
-MIDDLEWARE_CLASSES += (
-    'django.middleware.gzip.GZipMiddleware',
-)
+MIDDLEWARE += [
+    'django.middleware.gzip.GZipMiddleware'
+]
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of allauth
@@ -697,9 +697,9 @@ INSTALLED_APPS += (
 # REQUESTLOGGING MIDDLEWARE_CLASSES - BEGIN - Do not edit or remove this line!
 
 # request logger specific middleware classes
-MIDDLEWARE_CLASSES += (
-    'django_requestlogging.middleware.LogSetupMiddleware',
-)
+#MIDDLEWARE_CLASSES += (
+#    'django_requestlogging.middleware.LogSetupMiddleware',
+#)
 # REQUESTLOGGING MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
 .
 wq
