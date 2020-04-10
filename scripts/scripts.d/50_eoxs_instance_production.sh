@@ -434,6 +434,7 @@ wq
 END
 
 { ex "$URLS" || /bin/true ; } <<END
+/^# AEOLUS URLS - BEGIN/,/^# AEOLUS URLS - END/d
 /^# ALLAUTH URLS - BEGIN/,/^# ALLAUTH URLS - END/d
 wq
 END
@@ -500,6 +501,24 @@ LOGGING['loggers']['aeolus'] = {
 .
 wq
 END
+
+
+# Remove original url patterns
+{ ex "$URLS" || /bin/true ; } <<END
+$ a
+# AEOLUS URLS - BEGIN - Do not edit or remove this line!
+
+from aeolus.views import upload_user_file
+
+urlpatterns += [
+    re_path(r'^upload/$', upload_user_file),
+]
+
+# AEOLUS URLS - END - Do not edit or remove this line!
+.
+wq
+END
+
 
 fi # end of AEOLUS configuration
 
