@@ -482,7 +482,6 @@ EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
     'aeolus.processes.list_jobs.ListJobs',
 ]
 AEOLUS_OPTIMIZED_DIR = '/mnt/data/optimized'
-EOXS_WMS_DIM_RANGE_SEPARATOR = ','
 EOXS_ASYNC_BACKENDS = [
     'eoxs_wps_async.backend.WPSAsyncBackendBase',
 ]
