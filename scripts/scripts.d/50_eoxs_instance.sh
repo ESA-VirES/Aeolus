@@ -643,6 +643,11 @@ urlpatterns += patterns('',
          TemplateView.as_view(template_name='account/servicetc.html'),
         name='servicetc'
     ),
+    url(
+        r'^accounts/privacy_notice$',
+         TemplateView.as_view(template_name='account/privacy_notice.html'),
+        name='privacy_notice'
+    ),
 )
 # ALLAUTH URLS - END - Do not edit or remove this line!
 .
