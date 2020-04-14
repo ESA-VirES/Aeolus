@@ -868,5 +868,8 @@ systemctl restart "${VIRES_WPS_SERVICE_NAME}.service"
 systemctl status "${VIRES_WPS_SERVICE_NAME}.service"
 
 #Disabled in order to restart apache only after deployment is fully configured
-#systemctl restart httpd.service
-#systemctl status httpd.service
+systemctl restart httpd.service
+systemctl status httpd.service
+
+systemctl restart gunicorn.service
+systemctl status gunicorn.service
