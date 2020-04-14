@@ -490,6 +490,10 @@ EOXS_ASYNC_BACKENDS = [
 ]
 # USER_UPLOAD_DIR = "${USER_UPLOAD_DIR}"
 USER_UPLOAD_DIR = "/mnt/wps/user_uploads"
+
+# required as EOxServer is now used behind a proxy
+USE_X_FORWARDED_HOST = True
+
 # AEOLUS PROCESSES - END - Do not edit or remove this line!
 .
 \$a
