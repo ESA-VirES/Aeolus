@@ -328,8 +328,7 @@ LOGGING = {
             'datefmt': '%Y-%m-%dT%H:%M:%S',
         },
         'access': {
-            # 'format': '[%(asctime)s.%(msecs)03d] %(remote_addr)s %(username)s %(name)s %(levelname)s: %(message)s',
-            'format': '[%(asctime)s.%(msecs)03d] %(name)s %(levelname)s: %(message)s',
+            'format': '[%(asctime)s.%(msecs)03d] %(remote_addr)s %(username)s %(name)s %(levelname)s: %(message)s',
             'datefmt': '%Y-%m-%dT%H:%M:%S',
         },
     },
