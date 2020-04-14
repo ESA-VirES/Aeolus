@@ -488,6 +488,8 @@ EOXS_WMS_DIM_RANGE_SEPARATOR = ','
 EOXS_ASYNC_BACKENDS = [
     'eoxs_wps_async.backend.WPSAsyncBackendBase',
 ]
+# USER_UPLOAD_DIR = "${USER_UPLOAD_DIR}"
+USER_UPLOAD_DIR = "/mnt/wps/user_uploads"
 # AEOLUS PROCESSES - END - Do not edit or remove this line!
 .
 \$a
