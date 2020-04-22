@@ -302,7 +302,7 @@ END
 # NOTE: Set the hostname manually if needed.
 #TODO add aeolus.services and env.host to ALLOWED_HOSTS
 ex "$SETTINGS" <<END
-1,\$s/\(^ALLOWED_HOSTS\s*=\s*\).*/\1['${VIRES_HOSTNAME_INTERNAL}','${VIRES_IP_ADDRESS}','${HOSTNAME}','127.0.0.1','::1']/
+1,\$s/\(^ALLOWED_HOSTS\s*=\s*\).*/\1['${VIRES_HOSTNAME_INTERNAL}','${VIRES_IP_ADDRESS}','${HOSTNAME}','aeolus.services','127.0.0.1','::1']/
 wq
 END
 
