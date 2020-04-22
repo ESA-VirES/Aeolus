@@ -126,8 +126,8 @@ wq
 END
 
 
-systemctl restart postgresql-10.service
-systemctl status postgresql-10.service
+systemctl restart postgresql-9.5.service
+systemctl status postgresql-9.5.service
 
 sudo -u postgres psql "user=$DBUSER password=$DBPASSWD dbname=$DBNAME" -q -c "CREATE EXTENSION postgis;"
 
