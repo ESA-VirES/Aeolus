@@ -14,6 +14,6 @@ INSTANCE="`basename "$VIRES_SERVER_HOME"`"
 INSTROOT="`dirname "$VIRES_SERVER_HOME"`"
 MNGCMD="${INSTROOT}/${INSTANCE}/manage.py"
 
-RANGETYPE_FILE="/usr/local/aeolus/aeolus/data/range_types.json"
+RANGETYPE_FILE="/usr/local/aeolus/aeolus/data/albedo_coverage_type.json"
 
-sudo -u "$VIRES_USER" python "$MNGCMD" eoxs_rangetype_load -i "${RANGETYPE_FILE}"
+sudo -u "$VIRES_USER" python3 "$MNGCMD" coveragetype import "${RANGETYPE_FILE}"

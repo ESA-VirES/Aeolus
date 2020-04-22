@@ -10,7 +10,7 @@
 
 info "Installing EOxServer asynchronous WPS backend."
 
-SOURCE_URL="https://github.com/DAMATS/WPS-Backend/archive/0.3.0.tar.gz"
+SOURCE_URL="https://github.com/DAMATS/WPS-Backend/archive/0.5.0.tar.gz"
 
 # set temporary directory removed after the installation
 TMP_DIR="`mktemp -d`"
@@ -31,5 +31,5 @@ cd "`find -name setup.py -exec dirname {} \; | head -n 1`"
 
 # install the software
 PACKAGE=eoxs-wps-async
-[ -z "`pip freeze 2>/dev/null | grep "$PACKAGE" `" ] || pip uninstall -y "$PACKAGE"
-python ./setup.py install
+[ -z "`pip3 freeze 2>/dev/null | grep "$PACKAGE" `" ] || pip3 uninstall -y "$PACKAGE"
+python3 ./setup.py install

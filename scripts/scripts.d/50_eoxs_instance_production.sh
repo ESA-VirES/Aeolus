@@ -94,15 +94,15 @@ info "Creating EOxServer instance '${INSTANCE}' in '$INSTROOT/$INSTANCE' ..."
 #      package is not available? First check that the 'eoxserver' tree is
 #      readable by anyone. (E.g. in case of read protected home directory when
 #      the development setup is used.)
-python -c 'import eoxserver' || {
+python3 -c 'import eoxserver' || {
     error "EOxServer does not seem to be installed!"
     exit 1
 }
 
 if [ ! -d "$INSTROOT/$INSTANCE" ]
 then
-    mkdir -p "$INSTROOT/$INSTANCE"
-    eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
+    sudo -u "$VIRES_USER" mkdir -p "$INSTROOT/$INSTANCE"
+    sudo -u "$VIRES_USER" /usr/local/bin/eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
 fi
 
 #-------------------------------------------------------------------------------
@@ -113,16 +113,60 @@ fi
 #-------------------------------------------------------------------------------
 # STEP 3: SETUP DJANGO DB BACKEND
 
-ex "$SETTINGS" <<END
-1,\$s/\('ENGINE'[	 ]*:[	 ]*\).*\(,\)/\1'$DBENGINE',/
-1,\$s/\('NAME'[	 ]*:[	 ]*\).*\(,\)/\1'$DBNAME',/
-1,\$s/\('USER'[	 ]*:[	 ]*\).*\(,\)/\1'$DBUSER',/
-1,\$s/\('PASSWORD'[	 ]*:[	 ]*\).*\(,\)/\1'$DBPASSWD',/
-1,\$s/\('HOST'[	 ]*:[	 ]*\).*\(,\)/\1'$DBHOST',/
-1,\$s/\('PORT'[	 ]*:[	 ]*\).*\(,\)/\1'$DBPORT',/
-1,\$s:\(STATIC_URL[	 ]*=[	 ]*\).*:\1'$STATIC_URL_PATH/':
+info "Connecting DB backend for '${INSTANCE}' in '${SETTINGS}' ..."
+
+{ ex "$SETTINGS" || /bin/true ; } <<END
+/^# DATABASE - BEGIN/,/^# DATABASE - END/d
 wq
 END
+
+# extending the EOxServer settings.py
+ex "$SETTINGS" <<END
+/^db_type\s*=/
+a
+# DATABASE - BEGIN - Do not edit or remove this line!
+db_type = None
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'HOST': '$DBHOST',
+        'PORT': '$DBPORT',
+        'NAME': '$DBNAME',
+        'USER': '$DBUSER',
+        'PASSWORD': '$DBPASSWD',
+    }
+}
+# DATABASE - END - Do not edit or remove this line!
+.
+wq
+END
+
+
+#-------------------------------------------------------------------------------
+# STEP 4.x: GUNICORN WEB SERVER INTEGRATION
+
+
+info "Creating gunicorn service"
+
+echo "[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=$VIRES_USER
+Group=$VIRES_GROUP
+WorkingDirectory=$VIRES_SERVER_HOME
+ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --timeout 600 --bind 127.0.0.1:8012 --chdir ${INSTROOT}/${INSTANCE} ${INSTANCE}.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+" > /etc/systemd/system/gunicorn.service
+
+systemctl daemon-reload
+
+systemctl enable "gunicorn.service"
+systemctl restart "gunicorn.service"
+systemctl status "gunicorn.service"
 
 #-------------------------------------------------------------------------------
 # STEP 4: APACHE WEB SERVER INTEGRATION
@@ -146,22 +190,13 @@ do
 
     # static content
     Alias "$STATIC_URL_PATH" "$INSTSTAT_DIR"
+    ProxyPass "$STATIC_URL_PATH" !
     <Directory "$INSTSTAT_DIR">
         Options -MultiViews +FollowSymLinks
         Header set Access-Control-Allow-Origin "*"
     </Directory>
 
-    # WSGI service endpoint
-    WSGIScriptAlias "${BASE_URL_PATH:-/}" "${INSTROOT}/${INSTANCE}/${INSTANCE}/wsgi.py"
-    <Directory "${INSTROOT}/${INSTANCE}/${INSTANCE}">
-        <Files "wsgi.py">
-            WSGIProcessGroup $EOXS_WSGI_PROCESS_GROUP
-            WSGIApplicationGroup %{GLOBAL}
-            Header set Access-Control-Allow-Origin "*"
-            Header set Access-Control-Allow-Headers Content-Type
-            Header set Access-Control-Allow-Methods "POST, GET"
-        </Files>
-    </Directory>
+    ProxyPass "/" "http://127.0.0.1:8012/" connectiontimeout=60 timeout=600
 
     # EOXS00_END - EOxServer instance - Do not edit or remove this line!
 .
@@ -186,7 +221,8 @@ site.addsitedir("${ENABLE_VIRTUALENV}/local/lib/python2.7/site-packages")
 /^os.environ/a
 # Start activate virtualenv
 activate_env=os.path.expanduser("${ENABLE_VIRTUALENV}/bin/activate_this.py")
-execfile(activate_env, dict(__file__=activate_env))
+exec(open(activate_env).read(), dict(__file__=activate_env))
+
 # End activate virtualenv
 .
 wq
@@ -266,7 +302,7 @@ END
 # NOTE: Set the hostname manually if needed.
 #TODO add aeolus.services and env.host to ALLOWED_HOSTS
 ex "$SETTINGS" <<END
-1,\$s/\(^ALLOWED_HOSTS\s*=\s*\).*/\1['${VIRES_HOSTNAME_INTERNAL}','${VIRES_IP_ADDRESS}','${HOSTNAME}','127.0.0.1','::1']/
+1,\$s/\(^ALLOWED_HOSTS\s*=\s*\).*/\1['${VIRES_HOSTNAME_INTERNAL}','${VIRES_IP_ADDRESS}','${HOSTNAME}','aeolus.services','127.0.0.1','::1']/
 wq
 END
 
@@ -283,7 +319,7 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         },
         'request_filter': {
-            '()': 'django_requestlogging.logging_filters.RequestFilter'
+            # '()': 'django_requestlogging.logging_filters.RequestFilter'
         },
     },
     'formatters': {
@@ -383,19 +419,21 @@ info "Application specific configuration ..."
 { ex "$SETTINGS" || /bin/true ; } <<END
 /^# AEOLUS APPS - BEGIN/,/^# AEOLUS APPS - END/d
 /^# AEOLUS COMPONENTS - BEGIN/,/^# AEOLUS COMPONENTS - END/d
+/^# AEOLUS PROCESSES - BEGIN/,/^# AEOLUS PROCESSES - END/d
 /^# AEOLUS LOGGING - BEGIN/,/^# AEOLUS LOGGING - END/d
 /^# WPSASYNC COMPONENTS - BEGIN/,/^# WPSASYNC COMPONENTS - END/d
 /^# WPSASYNC LOGGING - BEGIN/,/^# WPSASYNC LOGGING - END/d
 /^# ALLAUTH APPS - BEGIN/,/^# ALLAUTH APPS - END/d
-/^# ALLAUTH MIDDLEWARE_CLASSES - BEGIN/,/^# ALLAUTH MIDDLEWARE_CLASSES - END/d
+/^# ALLAUTH MIDDLEWARE - BEGIN/,/^# ALLAUTH MIDDLEWARE - END/d
 /^# ALLAUTH LOGGING - BEGIN/,/^# ALLAUTH LOGGING - END/d
 /^# REQUESTLOGGING APPS - BEGIN/,/^# REQUESTLOGGING APPS - END/d
-/^# REQUESTLOGGING MIDDLEWARE_CLASSES - BEGIN/,/^# REQUESTLOGGING MIDDLEWARE_CLASSES - END/d
+/^# REQUESTLOGGING MIDDLEWARE - BEGIN/,/^# REQUESTLOGGING MIDDLEWARE - END/d
 /^# EMAIL_BACKEND - BEGIN/,/^# EMAIL_BACKEND - END/d
 wq
 END
 
 { ex "$URLS" || /bin/true ; } <<END
+/^# AEOLUS URLS - BEGIN/,/^# AEOLUS URLS - END/d
 /^# ALLAUTH URLS - BEGIN/,/^# ALLAUTH URLS - END/d
 wq
 END
@@ -413,15 +451,6 @@ then
 else
     info "AEOLUS specific configuration ..."
 
-    # remove unnecessary or conflicting component paths
-    { ex "$SETTINGS" || /bin/true ; } <<END
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.ows\.wcs\.\*\*'/#&/
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.native\.\*\*'/#&/
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.gdal\.\*\*'/#&/
-g/^COMPONENTS\s*=\s*(/,/^)/s/'eoxserver\.services\.mapserver\.\*\*'/#&/
-wq
-END
-
     # extending the EOxServer settings.py
     ex "$SETTINGS" <<END
 /^INSTALLED_APPS\s*=/
@@ -435,14 +464,36 @@ INSTALLED_APPS += (
 .
 /^COMPONENTS\s*=/
 /^)/a
-# AEOLUS COMPONENTS - BEGIN - Do not edit or remove this line!
-COMPONENTS += (
-    #'eoxserver.services.mapserver.wms.*',
-    'aeolus.processes.*',
-    'aeolus.mapserver.**',
-    'eoxserver.services.mapserver.wms.*',
-)
-# AEOLUS COMPONENTS - END - Do not edit or remove this line!
+# AEOLUS PROCESSES - BEGIN - Do not edit or remove this line!
+from eoxserver.services.ows.wps.config import DEFAULT_EOXS_PROCESSES
+EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
+    'aeolus.processes.aux.Level1BAUXISRExtract',
+    'aeolus.processes.aux.Level1BAUXMRCExtract',
+    'aeolus.processes.aux.Level1BAUXRRCExtract',
+    'aeolus.processes.aux.Level1BAUXZWCExtract',
+    'aeolus.processes.aux_met.AUXMET12Extract',
+    'aeolus.processes.dsd.DSDExtract',
+    'aeolus.processes.level_1b.Level1BExtract',
+    'aeolus.processes.level_2a.Level2AExtract',
+    'aeolus.processes.level_2b.Level2BExtract',
+    'aeolus.processes.level_2c.Level2CExtract',
+    'aeolus.processes.raw_download.RawDownloadProcess',
+    'aeolus.processes.remove_job.RemoveJob',
+    'aeolus.processes.list_jobs.ListJobs',
+]
+AEOLUS_OPTIMIZED_DIR = '/mnt/data/optimized'
+EOXS_WMS_DIM_RANGES_SEPARATOR = ';'
+EOXS_WMS_DIM_RANGE_SEPARATOR = ','
+EOXS_ASYNC_BACKENDS = [
+    'eoxs_wps_async.backend.WPSAsyncBackendBase',
+]
+# USER_UPLOAD_DIR = "${USER_UPLOAD_DIR}"
+USER_UPLOAD_DIR = "/mnt/wps/user_uploads"
+
+# required as EOxServer is now used behind a proxy
+USE_X_FORWARDED_HOST = True
+
+# AEOLUS PROCESSES - END - Do not edit or remove this line!
 .
 \$a
 # AEOLUS LOGGING - BEGIN - Do not edit or remove this line!
@@ -455,6 +506,24 @@ LOGGING['loggers']['aeolus'] = {
 .
 wq
 END
+
+
+# Remove original url patterns
+{ ex "$URLS" || /bin/true ; } <<END
+$ a
+# AEOLUS URLS - BEGIN - Do not edit or remove this line!
+
+from aeolus.views import upload_user_file
+
+urlpatterns += [
+    re_path(r'^upload/$', upload_user_file),
+]
+
+# AEOLUS URLS - END - Do not edit or remove this line!
+.
+wq
+END
+
 
 fi # end of AEOLUS configuration
 
@@ -488,24 +557,24 @@ INSTALLED_APPS += (
 
 # ALLAUTH APPS - END - Do not edit or remove this line!
 .
-/^MIDDLEWARE_CLASSES\s*=/
+/^MIDDLEWARE\s*=/
 /^)/a
-# ALLAUTH MIDDLEWARE_CLASSES - BEGIN - Do not edit or remove this line!
+# ALLAUTH MIDDLEWARE - BEGIN - Do not edit or remove this line!
 
 # allauth specific middleware classes
-MIDDLEWARE_CLASSES += (
-    'eoxs_allauth.middleware.InactiveUserLogoutMiddleware',
-    'eoxs_allauth.middleware.AccessLoggingMiddleware',
+MIDDLEWARE += [
+    'eoxs_allauth.middleware.access_logging_middleware',
+    'eoxs_allauth.middleware.inactive_user_logout_middleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     # SessionAuthenticationMiddleware is only available in django 1.7
     # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
 # VirES Specific middleware classes
-MIDDLEWARE_CLASSES += (
-    'django.middleware.gzip.GZipMiddleware',
-)
+MIDDLEWARE += [
+    'django.middleware.gzip.GZipMiddleware'
+]
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of allauth
@@ -552,9 +621,9 @@ OWS11_EXCEPTION_XSL = join(STATIC_URL, "other/owserrorstyle.xsl")
 
 # Disabled registration
 REGISTRATION_OPEN = True
-ACCOUNT_ADAPTER = 'eoxs_allauth.apps.NoNewUsersAccountAdapter'
+ACCOUNT_ADAPTER = 'eoxs_allauth.adapter.NoNewUsersAccountAdapter'
 
-# ALLAUTH MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
+# ALLAUTH MIDDLEWARE - END - Do not edit or remove this line!
 .
 \$a
 # ALLAUTH LOGGING - BEGIN - Do not edit or remove this line!
@@ -588,31 +657,31 @@ $ a
 import eoxs_allauth.views
 from django.views.generic import TemplateView
 
-urlpatterns += patterns('',
-    url(r'^/?$', eoxs_allauth.views.workspace),
-    url(r'^ows$', eoxs_allauth.views.wrapped_ows),
-    url(r'^accounts/', include('eoxs_allauth.urls')),
-    url(
+urlpatterns += [
+    re_path(r'^$', eoxs_allauth.views.workspace),
+    re_path(r'^ows$', eoxs_allauth.views.wrapped_ows),
+    re_path(r'^accounts/', include('eoxs_allauth.urls')),
+    re_path(
         r'^accounts/faq$',
         TemplateView.as_view(template_name='account/faq.html'),
         name='faq'
     ),
-    url(
+    re_path(
         r'^accounts/datatc$',
         TemplateView.as_view(template_name='account/datatc.html'),
         name='datatc'
     ),
-    url(
+    re_path(
         r'^accounts/servicetc$',
          TemplateView.as_view(template_name='account/servicetc.html'),
         name='servicetc'
     ),
-    url(
+    re_path(
         r'^accounts/privacy_notice$',
-         TemplateView.as_view(template_name='account/privacy_notice.html'),
+        TemplateView.as_view(template_name='account/privacy_notice.html'),
         name='privacy_notice'
     ),
-)
+]
 # ALLAUTH URLS - END - Do not edit or remove this line!
 .
 wq
@@ -648,19 +717,19 @@ ex "$SETTINGS" <<END
 a
 # REQUESTLOGGING APPS - BEGIN - Do not edit or remove this line!
 INSTALLED_APPS += (
-    'django_requestlogging',
+    # 'django_requestlogging',
 )
 # REQUESTLOGGING APPS - END - Do not edit or remove this line!
 .
-/^MIDDLEWARE_CLASSES\s*=/
+/^MIDDLEWARE\s*=/
 /^)/a
-# REQUESTLOGGING MIDDLEWARE_CLASSES - BEGIN - Do not edit or remove this line!
+# REQUESTLOGGING MIDDLEWARE - BEGIN - Do not edit or remove this line!
 
 # request logger specific middleware classes
-MIDDLEWARE_CLASSES += (
-    'django_requestlogging.middleware.LogSetupMiddleware',
-)
-# REQUESTLOGGING MIDDLEWARE_CLASSES - END - Do not edit or remove this line!
+#MIDDLEWARE += [
+#    'django_requestlogging.middleware.LogSetupMiddleware',
+#]
+# REQUESTLOGGING MIDDLEWARE - END - Do not edit or remove this line!
 .
 wq
 END
@@ -684,11 +753,12 @@ else
     do
         { ex "$CONF" || /bin/true ; } <<END
 /EOXS01_BEGIN/,/EOXS01_END/de
-/^[ 	]*<\/VirtualHost>/i
+/^[ 	]*<\/Location>/a
     # EOXS01_BEGIN - EOxServer instance - Do not edit or remove this line!
 
     # WPS static content
     Alias "$VIRES_WPS_URL_PATH" "$VIRES_WPS_PERM_DIR"
+    ProxyPass "$VIRES_WPS_URL_PATH" !
     <Directory "$VIRES_WPS_PERM_DIR">
         EnableSendfile off
         Options -MultiViews +FollowSymLinks
@@ -706,10 +776,6 @@ END
 /^COMPONENTS\s*=/
 /^)/a
 # WPSASYNC COMPONENTS - BEGIN - Do not edit or remove this line!
-COMPONENTS += (
-    'eoxs_wps_async.backend',
-    'eoxs_wps_async.processes.**',
-)
 # WPSASYNC COMPONENTS - END - Do not edit or remove this line!
 .
 \$a
@@ -766,7 +832,7 @@ Before=httpd.service
 Type=simple
 User=$VIRES_USER
 ExecStartPre=/usr/bin/rm -fv $VIRES_WPS_SOCKET
-ExecStart=${ENABLE_VIRTUALENV:-/usr}/bin/python -EsOm eoxs_wps_async.daemon ${INSTANCE}.settings $INSTROOT/$INSTANCE
+ExecStart=/usr/bin/python3 -EOm eoxs_wps_async.daemon ${INSTANCE}.settings $INSTROOT/$INSTANCE
 
 [Install]
 WantedBy=multi-user.target
@@ -781,24 +847,12 @@ fi # end of WPS-ASYNC configuration
 info "Initializing EOxServer instance '${INSTANCE}' ..."
 
 # collect static files
-python "$MNGCMD" collectstatic -l --noinput
+sudo -u "$VIRES_USER" python3 "$MNGCMD" collectstatic -l --noinput
 
 # setup new database
 # python "$MNGCMD" makemigrations
-python "$MNGCMD" migrate
+sudo -u "$VIRES_USER" python3 "$MNGCMD" migrate
 
-#-------------------------------------------------------------------------------
-# STEP 8: APP-SPECIFIC INITIALISATION
-
-if [ "$CONFIGURE_VIRES" == "YES" ]
-then
-    # load rangetypes
-    python "$MNGCMD" vires_rangetype_load || true
-
-    # register models
-    python "$MNGCMD" vires_model_remove --all
-#    python "$MNGCMD" vires_model_add ""
-fi
 
 #-------------------------------------------------------------------------------
 # STEP 9: CHANGE OWNERSHIP OF THE CONFIGURATION FILES
@@ -814,5 +868,8 @@ systemctl restart "${VIRES_WPS_SERVICE_NAME}.service"
 systemctl status "${VIRES_WPS_SERVICE_NAME}.service"
 
 #Disabled in order to restart apache only after deployment is fully configured
-#systemctl restart httpd.service
-#systemctl status httpd.service
+systemctl restart httpd.service
+systemctl status httpd.service
+
+systemctl restart gunicorn.service
+systemctl status gunicorn.service

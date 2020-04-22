@@ -29,5 +29,5 @@ do
     DST="${FIXTURES_DIR_DST}/${FNAME}.json"
     cp "$SRC" "$DST"
     [ -n "$VIRES_ENVIRONMENT" ] && sed -e 's|<environment>|%s|g' -i "$DST"
-    python "$MNGCMD" loaddata "$FNAME"
+    python3 "$MNGCMD" loaddata "$FNAME"
 done

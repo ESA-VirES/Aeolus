@@ -29,5 +29,5 @@ do
     DST="${FIXTURES_DIR_DST}/${FNAME}.json"
     cp "$SRC" "$DST"
     chown -v "$VIRES_USER:$VIRES_GROUP" "$DST"
-    sudo -u "$VIRES_USER" python "$MNGCMD" loaddata "$FNAME"
+    sudo -u "$VIRES_USER" python3 "$MNGCMD" loaddata "$FNAME"
 done

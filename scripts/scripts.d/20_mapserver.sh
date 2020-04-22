@@ -20,7 +20,7 @@ MAPSERVER_PY_RPM_VERSION="`basename "$MAPSERVER_PY_RPM" | sed -e 's/^mapserver-p
 
 # install from yum repository first
 #(yum update below doesn't throw an error on nothing to do)
-yum --assumeyes install mapserver mapserver-python
+yum --assumeyes install mapserver mapserver-python3
 
 # if there are the required RPMs and all have the same version
 # preferably install the local packages

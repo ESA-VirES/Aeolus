@@ -11,3 +11,4 @@
 info "Installing PIP Python package manager ..."
 
 yum --assumeyes install python-pip
+yum --assumeyes install python3-pip
