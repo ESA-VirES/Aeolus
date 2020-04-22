@@ -1,13 +1,13 @@
 #!/bin/sh
 #-------------------------------------------------------------------------------
 #
-# Purpose: CODA installation setup
+# Purpose: netCDF4 installation.
 # Author(s): Fabian Schindler <fabian.schindler@eox.at>
 #-------------------------------------------------------------------------------
-# Copyright (C) 2017 EOX IT Services GmbH
+# Copyright (C) 2018 EOX IT Services GmbH
 
 . `dirname $0`/../lib_logging.sh
 
-info "Installing coda ..."
+info "Installing SciPY ..."
 
-yum --assumeyes install coda coda-python3
+yum install --assumeyes python36-scipy

@@ -25,25 +25,25 @@ WSGI_DAEMON="WSGIDaemonProcess $EOXS_WSGI_PROCESS_GROUP processes=$EOXS_WSGI_NPR
 WSGI_IMPORTSCRIPT="WSGIImportScript $EOXS_WSGI_IMPORT_SCRIPT process-group=$EOXS_WSGI_PROCESS_GROUP application-group=%{GLOBAL}"
 #TODO add: WSGIRestrictEmbedded On
 
-CONF="`locate_wsgi_daemon $EOXS_WSGI_PROCESS_GROUP`"
-if [ -z "$CONF" ]
-then
-    cat >> /etc/httpd/conf.d/wsgi.conf <<END
+# CONF="`locate_wsgi_daemon $EOXS_WSGI_PROCESS_GROUP`"
+# if [ -z "$CONF" ]
+# then
+#     cat >> /etc/httpd/conf.d/wsgi.conf <<END
 
-# WSGI process daemon used by the EOxServer
-$WSGI_DAEMON
-END
-else
-    ex "$CONF" <<END
-g/^[ 	]*WSGIDaemonProcess[ 	]*$EOXS_WSGI_PROCESS_GROUP/d
-g/^[ 	]*WSGIImportScript.*process-group=$EOXS_WSGI_PROCESS_GROUP/d
-i
-$WSGI_DAEMON
-$WSGI_IMPORTSCRIPT
-.
-wq
-END
-fi
+# # WSGI process daemon used by the EOxServer
+# $WSGI_DAEMON
+# END
+# else
+#     ex "$CONF" <<END
+# g/^[ 	]*WSGIDaemonProcess[ 	]*$EOXS_WSGI_PROCESS_GROUP/d
+# g/^[ 	]*WSGIImportScript.*process-group=$EOXS_WSGI_PROCESS_GROUP/d
+# i
+# $WSGI_DAEMON
+# $WSGI_IMPORTSCRIPT
+# .
+# wq
+# END
+# fi
 
 #Disabled in order to restart apache only after deployment is fully configured
 #systemctl restart httpd.service

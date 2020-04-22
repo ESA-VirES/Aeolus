@@ -19,5 +19,5 @@ yum --assumeyes install python-setuptools
 # STEP 2: INSTALL EOxServer django-allauth integration
 pushd .
 cd "$EOXS_ALLAUTH_DEV_PATH"
-python ./setup.py develop
+python3 ./setup.py develop
 popd

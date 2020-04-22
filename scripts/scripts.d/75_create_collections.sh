@@ -22,7 +22,7 @@ MNGCMD="${INSTROOT}/${INSTANCE}/manage.py"
 
 RANGETYPE_FILE="/usr/local/aeolus/aeolus/data/range_types.json"
 
-sudo -u "$VIRES_USER" python "$MNGCMD" eoxs_rangetype_load -i "${RANGETYPE_FILE}"
+sudo -u "$VIRES_USER" python3 "$MNGCMD" eoxs_rangetype_load -i "${RANGETYPE_FILE}"
 
 declare -A COLLECTION_TO_RANGETYPE
 COLLECTION_TO_RANGETYPE=(
@@ -38,9 +38,9 @@ COLLECTION_TO_RANGETYPE=(
 )
 
 for collection in "${!COLLECTION_TO_RANGETYPE[@]}" ; do
-    if sudo -u "$VIRES_USER" python "$MNGCMD" eoxs_id_check "${collection}" 2> /dev/null ; then
+    if sudo -u "$VIRES_USER" python3 "$MNGCMD" eoxs_id_check "${collection}" 2> /dev/null ; then
         echo "Creating collection ${collection}"
-        sudo -u "$VIRES_USER" python "$MNGCMD" aeolus_collection_create \
+        sudo -u "$VIRES_USER" python3 "$MNGCMD" aeolus_collection_create \
             -i "${collection}" \
             -r "${COLLECTION_TO_RANGETYPE[$collection]}"
     else

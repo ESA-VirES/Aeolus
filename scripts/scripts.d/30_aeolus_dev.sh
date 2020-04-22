@@ -20,5 +20,5 @@ yum --assumeyes install python-matplotlib python-setuptools
 # Install VirES EOxServer extension
 pushd .
 cd "$VIRES_DEV_PATH"
-python ./setup.py develop
+python3 ./setup.py develop
 popd
