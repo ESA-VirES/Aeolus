@@ -621,7 +621,7 @@ OWS11_EXCEPTION_XSL = join(STATIC_URL, "other/owserrorstyle.xsl")
 
 # Disabled registration
 REGISTRATION_OPEN = True
-ACCOUNT_ADAPTER = 'eoxs_allauth.adapter.NoNewUsersAccountAdapter'
+#ACCOUNT_ADAPTER = 'eoxs_allauth.adapter.NoNewUsersAccountAdapter'
 
 # ALLAUTH MIDDLEWARE - END - Do not edit or remove this line!
 .
