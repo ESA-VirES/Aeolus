@@ -15,7 +15,7 @@ After=network.target
 User=$VIRES_USER
 Group=$VIRES_GROUP
 WorkingDirectory=$VIRES_SERVER_HOME
-ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --bind unix:$GUNICORN_SOCKET eoxs.wsgi:application
+ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --timeout 600 --bind 127.0.0.1:8012 --chdir ${INSTROOT}/${INSTANCE} ${INSTANCE}.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
@@ -23,6 +23,5 @@ WantedBy=multi-user.target
 
 service gunicorn start
 service gunicorn status
-
 
 systemctl status gunicorn.service

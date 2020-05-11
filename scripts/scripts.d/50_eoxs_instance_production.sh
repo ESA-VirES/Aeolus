@@ -160,13 +160,13 @@ ExecStart=/usr/local/bin/gunicorn --workers $EOXS_WSGI_NPROC --timeout 600 --bin
 
 [Install]
 WantedBy=multi-user.target
-" > /etc/systemd/system/gunicorn.service
+" > "/etc/systemd/system/gunicorn_${INSTANCE}.service"
 
 systemctl daemon-reload
 
-systemctl enable "gunicorn.service"
-systemctl restart "gunicorn.service"
-systemctl status "gunicorn.service"
+systemctl enable "gunicorn_${INSTANCE}.service"
+systemctl restart "gunicorn_${INSTANCE}.service"
+systemctl status "gunicorn_${INSTANCE}.service"
 
 #-------------------------------------------------------------------------------
 # STEP 4: APACHE WEB SERVER INTEGRATION
@@ -621,7 +621,7 @@ OWS11_EXCEPTION_XSL = join(STATIC_URL, "other/owserrorstyle.xsl")
 
 # Disabled registration
 REGISTRATION_OPEN = True
-ACCOUNT_ADAPTER = 'eoxs_allauth.adapter.NoNewUsersAccountAdapter'
+#ACCOUNT_ADAPTER = 'eoxs_allauth.adapter.NoNewUsersAccountAdapter'
 
 # ALLAUTH MIDDLEWARE - END - Do not edit or remove this line!
 .
@@ -871,5 +871,5 @@ systemctl status "${VIRES_WPS_SERVICE_NAME}.service"
 systemctl restart httpd.service
 systemctl status httpd.service
 
-systemctl restart gunicorn.service
-systemctl status gunicorn.service
+systemctl restart "gunicorn_${INSTANCE}.service"
+systemctl status "gunicorn_${INSTANCE}.service"

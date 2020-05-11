@@ -22,5 +22,6 @@ yum --assumeyes install python-dateutil python-lxml proj-epsg python-setuptools
 
 pushd .
 cd "$EOXS_DEV_PATH"
-python3 ./setup.py develop
+# python3 ./setup.py develop
+pip3 install --editable .
 popd

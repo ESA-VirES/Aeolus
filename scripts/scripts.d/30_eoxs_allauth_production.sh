@@ -25,5 +25,5 @@ pushd .
 cd "$EOXS_ALLAUTH_DEV_PATH"
 [ ! -d build/ ] || rm -fvR build/
 [ ! -d dist/ ] || rm -fvR dist/
-python3 ./setup.py develop
+pip3 install --no-deps -U .
 popd
