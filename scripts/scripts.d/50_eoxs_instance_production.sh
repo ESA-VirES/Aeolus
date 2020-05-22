@@ -487,6 +487,7 @@ EOXS_WMS_DIM_RANGE_SEPARATOR = ','
 EOXS_ASYNC_BACKENDS = [
     'eoxs_wps_async.backend.WPSAsyncBackendBase',
 ]
+EOXS_VALIDATE_IDS_NCNAME = False
 # USER_UPLOAD_DIR = "${USER_UPLOAD_DIR}"
 USER_UPLOAD_DIR = "/mnt/wps/user_uploads"
 
