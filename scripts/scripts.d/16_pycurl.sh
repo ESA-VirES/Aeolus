@@ -37,4 +37,4 @@
 
 info "Installing pyCURL ..."
 
-yum install --assume-yes python36-pycurl
+yum --assumeyes install python36-pycurl
