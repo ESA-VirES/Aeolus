@@ -1,0 +1,3 @@
+#!/bin/bash
+. /var/www/vires/venv_p36_oauth/bin/activate
+"$@"

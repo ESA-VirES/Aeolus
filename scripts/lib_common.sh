@@ -34,7 +34,7 @@ export VIRES_INSTALLER_VERSION="`cat "$VERSION_FILE"`"
 # flag indicating whether the installation script shall enable the firewall
 export ENABLE_FIREWALL=${ENABLE_FIREWALL:-NO}
 
-# public hostname (or IP number) under which the ODA-OS shall be accessable
+# public hostname (or IP number) under which the server shall be accessible
 # NOTE: Critical parameter! Be sure you set it to the proper value.
 export VIRES_HOSTNAME=${VIRES_HOSTNAME}
 
@@ -42,31 +42,50 @@ export VIRES_HOSTNAME=${VIRES_HOSTNAME}
 # NOTE: Critical parameter! Be sure you set it to the proper value.
 export VIRES_URL_ROOT=${VIRES_URL_ROOT}
 
-# root directory of the VirES - by default set to '/srv/vires'
+# root directory of the VirES
 export VIRES_ROOT=${VIRES_ROOT:-/var/www/vires}
 
-# directory where the log files shall be placed - by default set to '/var/log/vires'
+# directory where the log files shall be placed
 export VIRES_LOGDIR=${VIRES_LOGDIR:-/var/log/vires}
 
-# directory of the short-term data storage - by default set to '/tmp/vires'
+# directory of the short-term data storage
 export VIRES_TMPDIR=${VIRES_TMPDIR:-/tmp/vires}
 
 # directory where the PosgreSQL DB stores the files
-export VIRES_PGDATA_DIR=${VIRES_PGDATA_DIR:-/var/lib/pgsql/data}
+#export VIRES_PGDATA_DIR=${VIRES_PGDATA_DIR}
 
-# directory of the long-term data storage - by default set to '/srv/eodata'
+# directory of the long-term data storage
 export VIRES_DATADIR=${VIRES_DATADIR:-/mnt/data}
 
-# names of the ODA-OS user and group - by default set to 'vires:vires'
+# names of the user and group
 export VIRES_GROUP=${VIRES_GROUP:-vires}
 export VIRES_USER=${VIRES_USER:-vires}
 
+# location of the VirES user home directory
+export VIRES_USER_HOME=${VIRES_USER_HOME:-$VIRES_ROOT/home}
+
+# names of the user and group used to install SW and configuration
+export VIRES_INSTALL_GROUP=${VIRES_INSTALL_GROUP:-root}
+export VIRES_INSTALL_USER=${VIRES_INSTALL_USER:-root}
+
 # location of the VirES Server home directory
 export VIRES_SERVER_HOME=${VIRES_SERVER_HOME:-$VIRES_ROOT/eoxs}
-# WSGI daemon - number of processes to be used by the VirES EOxServer instances
-export EOXS_WSGI_NPROC=${EOXS_WSGI_NPROC:-4}
-# WSGI daemon - process group to be used by the VirES EOxServer instances
-export EOXS_WSGI_PROCESS_GROUP=${EOXS_WSGI_PROCESS_GROUP:-vires_eoxs_ows}
+# location of the VirES Server URL
+export VIRES_SERVER_HOST=${VIRES_SERVER_HOST:-127.0.0.1:8011}
+# VirES server - service name
+export VIRES_SERVICE_NAME=${VIRES_SERVICE_NAME:-eoxs}
+
+# location of the OAuth2 Server home directory
+export OAUTH_SERVER_HOME=${OAUTH_SERVER_HOME:-$VIRES_ROOT/oauth}
+# location of the OAuth2 Server URL
+export OAUTH_SERVER_HOST=${OAUTH_SERVER_HOST:-127.0.0.1:8010}
+# OAuth2 server - service name
+export OAUTH_SERVICE_NAME=${OAUTH_SERVICE_NAME:-oauth}
+
+# number of processes to be used by the VirES EOxServer instance
+export VIRES_SERVER_NPROC=${VIRES_SERVER_NPROC:-4}
+# number of threads per process to be used by the VirES EOxServer instance
+export VIRES_SERVER_NTHREAD=${VIRES_SERVER_NTHREAD:-1}
 
 # location of the VirES Client home directory
 export VIRES_CLIENT_HOME=${VIRES_CLIENT_HOME:-$VIRES_ROOT/eoxc}
@@ -105,10 +124,16 @@ export DBHOST=${DBHOST:-}
 export DBPORT=${DBPORT:-}
 
 # are we using virtualenv
-export ENABLE_VIRTUALENV=${ENABLE_VIRTUALENV:-}
+export ENABLE_VIRTUALENV=${ENABLE_VIRTUALENV:-YES}
 
-# Switch controlling wether the AllAuth gets configured or not.
-export CONFIGURE_ALLAUTH=${CONFIGURE_ALLAUTH:-NO}
+# VirES-Server virtual environment
+export VIRES_VENV_ROOT="${VIRES_VENV_ROOT:-$VIRES_ROOT/venv_p36_eoxs}"
+
+# OAuth server virtual environment
+export OAUTH_VENV_ROOT="${OAUTH_VENV_ROOT:-$VIRES_ROOT/venv_p36_oauth}"
+
+# Switch controlling whether the AllAuth gets configured or not.
+export CONFIGURE_ALLAUTH=${CONFIGURE_ALLAUTH:-YES}
 
 # Optional location of the loaded fixtures.
 export FIXTURES_DIR_SRC="${FIXTURES_DIR_SRC}"
@@ -121,10 +146,17 @@ export TEMPLATES_DIR_SRC="${TEMPLATES_DIR_SRC}"
 export CONF_HTTP
 export CONF_HTTPS
 
-# optinal configuration file templates
+# optional configuration file templates
 export CONF_HTTP_TEMPLATE
 export CONF_HTTPS_TEMPLATE
 
 # configuration switches
 export CONFIGURE_HTTP
 export CONFIGURE_HTTPS
+
+export PIP_OPTIONS="--upgrade --upgrade-strategy=only-if-needed"
+
+export PG_VERSION="${PG_VERSION:-12}"
+export PG_REPO="${PG_REPO:-pgdg$PG_VERSION}"
+export PG_PACKAGE="${PG_RPM:-postgresql$PG_VERSION}"
+export PGIS_PACKAGE="${PGIS_PACKAGE:-postgis31_$PG_VERSION}"

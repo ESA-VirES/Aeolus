@@ -146,7 +146,7 @@ sudo -u postgres psql "user=$DBUSER password=$DBPASSWD dbname=$DBNAME" -q -c "CR
 # wq
 # END
 
-sudo -u "$VIRES_USER" echo " 
+sudo -u "$VIRES_USER" echo "
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',

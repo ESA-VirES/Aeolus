@@ -1,0 +1,1 @@
+../scripts.d/60_eoxs_client_config.sh

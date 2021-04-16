@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo -u vires /var/www/vires/venv_p36_eoxs/bin/python /var/www/vires/eoxs/manage.py "$@"
