@@ -67,7 +67,7 @@ do
     _create_collection ${product_type}_public -t ${product_type}
 done
 
-_import_coverage_type ADAM_albedo "/usr/local/aeolus/aeolus/data/albedo_coverage_type.json"
+_import_coverage_type ADAM_albedo "${VIRES_SOURCE_PATH:-/usr/local/aeolus}/aeolus/data/albedo_coverage_type.json"
 _create_collection_type ADAM_albedo -c ADAM_albedo
 _create_collection ADAM_albedo -t ADAM_albedo
 
