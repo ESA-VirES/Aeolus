@@ -145,6 +145,7 @@ SECRET_KEY = '$SECRET_KEY'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -433,7 +434,6 @@ MIDDLEWARE += [
     'eoxs_allauth.middleware.access_logging_middleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.gzip.GZipMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = (
