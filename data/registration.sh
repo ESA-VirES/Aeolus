@@ -48,21 +48,22 @@ END
 
 fi
 
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_1B -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_1B -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_2A -name AE_OPER_ALD_U_N_2A\*DBL ) --collection ALD_U_N_2A --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_2B -name AE_OPER_ALD_U_N_2B\*DBL ) --collection ALD_U_N_2B --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_2C -name AE_OPER_ALD_U_N_2C\*DBL ) --collection ALD_U_N_2C --conflict=REPLACE --traceback
+OPTIONS="--simplify 0.2"
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_1B -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_1B -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_2A -name AE_OPER_ALD_U_N_2A\*DBL ) --collection ALD_U_N_2A --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_2B -name AE_OPER_ALD_U_N_2B\*DBL ) --collection ALD_U_N_2B --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_2C -name AE_OPER_ALD_U_N_2C\*DBL ) --collection ALD_U_N_2C --conflict=REPLACE --traceback
 
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_1B_public -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B_public --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_2B_public -name AE_OPER_ALD_U_N_2B\*DBL ) --collection ALD_U_N_2B_public --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data/ALD_U_N_2C_public -name AE_OPER_ALD_U_N_2C\*DBL ) --collection ALD_U_N_2C_publid --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_1B_public -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B_public --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_2B_public -name AE_OPER_ALD_U_N_2B\*DBL ) --collection ALD_U_N_2B_public --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_2C_public -name AE_OPER_ALD_U_N_2C\*DBL ) --collection ALD_U_N_2C_publid --conflict=REPLACE --traceback
 
-$MNGCMD aeolus_product_add $( find /mnt/data -name AE_\*_ISR_\*EEF ) --collection AUX_ISR_1B --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data -name AE_\*_MRC_\*EEF ) --collection AUX_MRC_1B --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data -name AE_\*_RRC_\*EEF ) --collection AUX_RRC_1B --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data -name AE_\*_ZWC_\*EEF ) --collection AUX_ZWC_1B --conflict=REPLACE --traceback
-$MNGCMD aeolus_product_add $( find /mnt/data -name AE_\*_MET_\*DBL ) --collection AUX_MET_12 --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data -name AE_\*_ISR_\*EEF ) --collection AUX_ISR_1B --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data -name AE_\*_MRC_\*EEF ) --collection AUX_MRC_1B --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data -name AE_\*_RRC_\*EEF ) --collection AUX_RRC_1B --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data -name AE_\*_ZWC_\*EEF ) --collection AUX_ZWC_1B --conflict=REPLACE --traceback
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data -name AE_\*_MET_\*DBL ) --collection AUX_MET_12 --conflict=REPLACE --traceback
 
 while read MONTH FILENAME
 do
