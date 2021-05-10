@@ -55,6 +55,10 @@ set_instance_variables() {
 
     EOXSCONF="${INSTROOT}/${INSTANCE}/${INSTANCE}/conf/eoxserver.conf"
     OWS_URL="${VIRES_URL_ROOT}${BASE_URL_PATH}/ows"
+
+    VIRES_DATA_DIR="${VIRES_DATA_DIR:-/mnt/data}"
+    VIRES_OPTIMIZED_DIR="${VIRES_OPTIMIZED_DIR:-$VIRES_DATA_DIR/optimized}"
+    VIRES_UPLOAD_DIR="${VIRES_UPLOAD_DIR:-$INSTROOT/user_upload}"
 }
 
 load_db_conf () {

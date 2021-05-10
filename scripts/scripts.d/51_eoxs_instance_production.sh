@@ -43,6 +43,7 @@ required_variables SETTINGS WSGI_FILE URLS WSGI MNGCMD EOXSCONF
 required_variables STATIC_URL_PATH OWS_URL
 required_variables VIRESLOG ACCESSLOG
 required_variables OAUTH_SERVER_HOST
+required_variables VIRES_OPTIMIZED_DIR VIRES_UPLOAD_DIR
 required_variables DBENGINE VIRES_DBNAME
 required_variables SMTP_HOSTNAME SMTP_DEFAULT_SENDER SERVER_EMAIL
 
@@ -69,8 +70,8 @@ then
     eoxserver-instance.py "$INSTANCE" "$INSTROOT/$INSTANCE"
 fi
 
-# create WPS directories if missing
-for DIR in "$VIRES_WPS_TEMP_DIR" "$VIRES_WPS_PERM_DIR" "$VIRES_WPS_TASK_DIR" "`dirname "$VIRES_WPS_SOCKET"`"
+# create WPS and upload directories if missing
+for DIR in "$VIRES_OPTIMIZED_DIR" "$VIRES_UPLOAD_DIR" "$VIRES_WPS_TEMP_DIR" "$VIRES_WPS_PERM_DIR" "$VIRES_WPS_TASK_DIR" "`dirname "$VIRES_WPS_SOCKET"`"
 do
     if [ ! -d "$DIR" ]
     then
@@ -215,8 +216,8 @@ EOXS_ASYNC_BACKENDS = [
     'eoxs_wps_async.backend.WPSAsyncBackendBase',
 ]
 EOXS_VALIDATE_IDS_NCNAME = False
-AEOLUS_OPTIMIZED_DIR = '/mnt/data/optimized'
-USER_UPLOAD_DIR = "/mnt/wps/user_uploads"
+AEOLUS_OPTIMIZED_DIR = '${VIRES_OPTIMIZED_DIR}'
+USER_UPLOAD_DIR = '${VIRES_UPLOAD_DIR}'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = $_SMTP_USE_TLS
