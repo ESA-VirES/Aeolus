@@ -34,6 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "../../eoxserver", "/usr/local/eoxserver", owner: "root", group: "root"
   config.vm.synced_folder "../../eoxs-allauth", "/usr/local/eoxs-allauth", owner: "root", group: "root"
   config.vm.synced_folder "../../Aeolus-Server", "/usr/local/aeolus", owner: "root", group: "root"
+  config.vm.synced_folder "../../VirES-Server", "/usr/local/vires", owner: "root", group: "root"
   config.vm.synced_folder "../../vires-aeolus_ops", "/usr/local/vires-aeolus_ops", owner: "root", group: "root"
   config.vm.synced_folder "../", "/home/vagrant/Aeolus", owner: "vagrant", group: "vagrant"
   # data directory (Change to your custom data directory if necessary.)
@@ -41,11 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Shell provisioning
   config.vm.provision :shell, :inline => "cd /home/vagrant/Aeolus/scripts/ ; /bin/sh ./install.sh -d"
-  config.vm.provision :shell, :inline => "sudo systemctl restart eoxs_wps_async.service" , run: "always"
-  config.vm.provision :shell, :inline => "sudo systemctl restart httpd.service" , run: "always"
-
-  # when the updated definitions exist, copy them to the definitions directory
-  config.vm.provision :shell, :inline => "[ -f /usr/local/vires-aeolus_ops/4_other/AEOLUS-20180828.codadef ] && sudo cp /usr/local/vires-aeolus_ops/4_other/AEOLUS-20180828.codadef /usr/share/coda/definitions/"
+  config.vm.provision :shell, :inline => "cd /home/vagrant/Aeolus/scripts/ ; /bin/sh ./install.sh scripts.d/99_restart_server.sh", run: "always"
 
   # Adjust Virtualbox configuration
   config.vm.provider "virtualbox" do |v|

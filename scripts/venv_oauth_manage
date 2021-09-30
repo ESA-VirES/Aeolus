@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo -u vires /var/www/vires/venv_p36_oauth/bin/python /var/www/vires/oauth/manage.py "$@"

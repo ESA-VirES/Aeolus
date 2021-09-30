@@ -1,1 +1,0 @@
-../scripts.d/72_eoxs_initial_data.sh

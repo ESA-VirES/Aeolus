@@ -7,29 +7,13 @@
 # Copyright (C) 2017 EOX IT Services GmbH
 
 . `dirname $0`/../lib_logging.sh
+. `dirname $0`/../lib_python_venv.sh
+
+#TODO: fix the backend version
+SOURCE_URL="https://github.com/DAMATS/WPS-Backend/archive/0.5.2.tar.gz"
 
 info "Installing EOxServer asynchronous WPS backend."
 
-SOURCE_URL="https://github.com/DAMATS/WPS-Backend/archive/0.5.0.tar.gz"
+activate_venv "$VIRES_VENV_ROOT"
 
-# set temporary directory removed after the installation
-TMP_DIR="`mktemp -d`"
-cleanup () {
-    if [ -n "$TMP_DIR " -a -d "$TMP_DIR" ]
-    then
-        info "Removing temporary directory $TMP_DIR"
-        rm -fR "$TMP_DIR"
-    fi
-}
-trap cleanup EXIT
-
-# download and unpack the package and step to the installation directory
-info "Downloading and unpacking source $SOURCE_URL"
-cd "$TMP_DIR"
-curl -sSL "$SOURCE_URL" | tar -xzf -
-cd "`find -name setup.py -exec dirname {} \; | head -n 1`"
-
-# install the software
-PACKAGE=eoxs-wps-async
-[ -z "`pip3 freeze 2>/dev/null | grep "$PACKAGE" `" ] || pip3 uninstall -y "$PACKAGE"
-python3 ./setup.py install
+pip3 install $PIP_OPTIONS "$SOURCE_URL"
