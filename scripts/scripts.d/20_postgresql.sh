@@ -7,69 +7,59 @@
 # Copyright (C) 2015 EOX IT Services GmbH
 
 . `dirname $0`/../lib_logging.sh
+. `dirname $0`/../lib_postgres.sh
 
-info "Installing PosgreSQL RDBMS ... "
+info "Installing PosgreSQL $PG_VERSION RDBMS ... "
 
-PG_DATA_DIR_DEFAULT="/var/lib/pgsql/9.5/data"
-PG_DATA_DIR="${VIRES_PGDATA_DIR:-$PG_DATA_DIR_DEFAULT}"
-#======================================================================
+# Install RPM packages
+yum --assumeyes install $PG_PACKAGE $PG_SERVER_PACKAGE $PGIS_PACKAGE
 
-
-
-# STEP 1: INSTALL RPM PACKAGES
-yum --assumeyes install postgresql95 postgresql95-server postgis2_95 postgresql10-libs python3-psycopg2
-# yum install --assumeyes postgresql10 postgresql10-server postgis2_10 python3-psycopg2
-
-# STEP 2: Shut-down the postgress if already installed and running.
-if [ -n "`systemctl | grep postgresql-9.5.service`" ]
+if systemctl is-active "$PG_SERVICE_NAME"
 then
     info "Stopping running PostgreSQL server ..."
-    systemctl stop postgresql-9.5.service
+    PG_DATA_DIR_LAST=`psql -qA -c 'SHOW data_directory;' | grep -m 1 '^/'`
+    systemctl stop $PG_SERVICE_NAME
+else
+    [ -f "$PG_CONF_FILE" ] && PG_DATA_DIR_LAST="`head -n 1 "$PG_CONF_FILE"`"
 fi
 
-# STEP 3: CONFIGURE THE STORAGE DIRECTORY
+# Check if the database location changed since the last run.
+[ -f "$PG_CONF_FILE" -a -z "$PG_DATA_DIR_LAST" ] && PG_DATA_DIR_LAST="`head -n 1 "$PG_CONF_FILE"`"
+
+# set RESET_DB variable to YES to remove the existing database
+if [ "$PG_DATA_DIR" == "$PG_DATA_DIR_LAST" -a -z "$RESET_DB" ]
+then
+    info "PostgreSQL data location already set to $PG_DATA_DIR"
+    info "Preserving the existing PosgreSQL DB cluster ..."
+
+    systemctl start $PG_SERVICE_NAME
+    systemctl status $PG_SERVICE_NAME
+    exit 0
+fi
+
 info "Removing the existing PosgreSQL DB cluster ..."
-[ ! -d "$PG_DATA_DIR_DEFAULT" ] || rm -fR "$PG_DATA_DIR_DEFAULT"
-[ ! -d "$PG_DATA_DIR" ] || rm -fR "$PG_DATA_DIR"
+rm -fR "$PG_DATA_DIR_DEFAULT"
+rm -fR "$PG_DATA_DIR"
+rm -fR "$PG_DATA_DIR_LAST"
+rm -fv "`dirname $0`/../"db_*.conf
 
-# info "Setting the PostgreSQL data location to: $PG_DATA_DIR"
-# cat >/etc/systemd/system/postgresql.service <<END
-# .include /lib/systemd/system/postgresql-9.5.service
-# [Service]
-# Environment=PGDATA=$PG_DATA_DIR
-# END
-# systemctl daemon-reload
+info "Setting the PostgreSQL data location to: $PG_DATA_DIR"
+cat >/etc/systemd/system/$PG_SERVICE_NAME <<END
+.include /lib/systemd/system/$PG_SERVICE_NAME
+[Service]
+Environment=PGDATA=$PG_DATA_DIR
+END
 
-# STEP 4: INIT THE DB AND START THE SERVICE
+systemctl daemon-reload
+
 info "New database initialisation ... "
 
-/usr/pgsql-9.5/bin/postgresql95-setup initdb
-systemctl disable postgresql-9.5.service # DO NOT REMOVE!
-systemctl enable postgresql-9.5.service
-systemctl start postgresql-9.5.service
-systemctl status postgresql-9.5.service
+postgresql-setup initdb
 
+# Store current data location.
+echo "$PG_DATA_DIR" > "$PG_CONF_FILE"
 
-# ls -lisah "$PG_DATA_DIR" || true
-
-# /usr/pgsql-10/bin/postgresql-10-setup initdb
-# systemctl disable postgresql-10.service # DO NOT REMOVE!
-# systemctl enable postgresql-10.service
-# systemctl start postgresql-10.service
-# systemctl status postgresql-10.service
-
-# STEP 5: SETUP POSTGIS DATABASE TEMPLATE
-if [ -z "`sudo -u postgres psql --list | grep template_postgis`" ]
-then
-    sudo -u postgres createdb template_postgis
-    #sudo -u postgres createlang plpgsql template_postgis
-
-    # PG_SHARE=/usr/share/pgsql
-    # POSTGIS_SQL="postgis-64.sql"
-    # [ -f "$PG_SHARE/contrib/$POSTGIS_SQL" ] || POSTGIS_SQL="postgis.sql"
-    # sudo -u postgres psql -q -d template_postgis -f "$PG_SHARE/contrib/$POSTGIS_SQL"
-    # sudo -u postgres psql -q -d template_postgis -f "$PG_SHARE/contrib/spatial_ref_sys.sql"
-    # sudo -u postgres psql -q -d template_postgis -c "GRANT ALL ON geometry_columns TO PUBLIC;"
-    # sudo -u postgres psql -q -d template_postgis -c "GRANT ALL ON geography_columns TO PUBLIC;"
-    # sudo -u postgres psql -q -d template_postgis -c "GRANT ALL ON spatial_ref_sys TO PUBLIC;"
-fi
+systemctl disable $PG_SERVICE_NAME # DO NOT REMOVE!
+systemctl enable $PG_SERVICE_NAME
+systemctl start $PG_SERVICE_NAME
+systemctl status $PG_SERVICE_NAME

@@ -17,11 +17,11 @@ CONFIGURE_HTTP=${CONFIGURE_HTTP:-YES}
 CONFIGURE_HTTPS=${CONFIGURE_HTTPS:-YES}
 
 # STEP 1:  INSTALL RPM PACKAGES
-yum --assumeyes install httpd mod_wsgi mod_ssl crypto-utils
+yum --assumeyes install httpd mod_ssl crypto-utils
 
 # STEP 2: FIREWALL SETUP (OPTIONAL)
 # We enable access to port 80 and 443 from anywhere
-# and make the firewal chages permanent.
+# and make the firewall changes permanent.
 if [ "$ENABLE_FIREWALL" = "YES" ]
 then
     if [ "$CONFIGURE_HTTP" = "YES" ]
@@ -36,7 +36,7 @@ then
     fi
 fi
 
-# STEP 3: ENABLE ANS START THE SERVICE
+# STEP 3: ENABLE THE SERVICE
 systemctl enable httpd.service
-systemctl start httpd.service
-systemctl status httpd.service
+#systemctl start httpd.service
+#systemctl status httpd.service
