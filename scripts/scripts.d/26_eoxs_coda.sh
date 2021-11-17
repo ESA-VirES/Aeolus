@@ -32,6 +32,6 @@ if [ ! -f "${TARGET_DIR}/${FILENAME}" ]
 then
     info "Fetching coda Aeolus definition files ..."
     mkdir -p "$TARGET_DIR"
-    rm -fv "$TARGET_DIR/*.codadef"
+    rm -fv "$TARGET_DIR"/*.codadef
     wget -q -P "$TARGET_DIR" "$SOURCE_URL"
 fi
