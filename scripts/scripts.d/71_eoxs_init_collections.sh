@@ -72,4 +72,4 @@ _create_collection_type ADAM_albedo -c ADAM_albedo
 _create_collection ADAM_albedo -t ADAM_albedo
 
 # fix the access permissions (https://github.com/ESA-VirES/Aeolus-Server/issues/44)
-manage migrate
+manage migrate --noinput
