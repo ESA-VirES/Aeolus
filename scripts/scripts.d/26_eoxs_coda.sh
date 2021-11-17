@@ -23,7 +23,7 @@ pip3 install $PIP_OPTIONS "$PACKAGE"
 
 
 # download Aeolus product definition file
-VERSION="20210310"
+VERSION="20211103"
 FILENAME="AEOLUS-${VERSION}.codadef"
 SOURCE_URL="https://github.com/stcorp/codadef-aeolus/releases/download/${VERSION}/${FILENAME}"
 TARGET_DIR="$VENV_ROOT/share/coda/definitions/"
@@ -32,5 +32,6 @@ if [ ! -f "${TARGET_DIR}/${FILENAME}" ]
 then
     info "Fetching coda Aeolus definition files ..."
     mkdir -p "$TARGET_DIR"
+    rm -fv "$TARGET_DIR/*.codadef"
     wget -q -P "$TARGET_DIR" "$SOURCE_URL"
 fi
