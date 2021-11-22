@@ -62,7 +62,7 @@ do
 done
 
 # create public collections
-for product_type in ALD_U_N_1B ALD_U_N_2B ALD_U_N_2C
+for product_type in ALD_U_N_1B ALD_U_N_2A ALD_U_N_2B ALD_U_N_2C
 do
     _create_collection ${product_type}_public -t ${product_type}
 done
