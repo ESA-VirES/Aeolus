@@ -329,28 +329,14 @@ INSTALLED_APPS += [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.twitter',
-    #'allauth.socialaccount.providers.linkedin_oauth2',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.github',
+    'vires_oauth.providers.eoiam',
     'django_countries',
     'oauth2_provider',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'linkedin_oauth2': {
-        'SCOPE': [
-            'r_emailaddress',
-            'r_liteprofile',
-        ],
-       'PROFILE_FIELDS': [
-            'id',
-            'firstName',
-            'lastName',
-            'profilePicture',
-            'emailAddress',
-        ],
+    'eoiam': {
+        'SERVER_URL': 'https://$EOIAM_HOST/oauth2',
     },
 }
 
