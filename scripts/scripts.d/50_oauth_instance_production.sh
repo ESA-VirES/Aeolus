@@ -337,6 +337,7 @@ INSTALLED_APPS += [
 SOCIALACCOUNT_PROVIDERS = {
     'eoiam': {
         'SERVER_URL': 'https://$EOIAM_HOST/oauth2',
+        'TRUST_EMAILS': True,
     },
 }
 
