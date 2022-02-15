@@ -20,5 +20,11 @@ required_variables STATIC_DIR TEMPLATES_DIR EOXS_ALLAUTH_TEMPLATES_ROOT
 # copy static files
 cp -rv "${EOXS_ALLAUTH_TEMPLATES_ROOT}"/static/* "$STATIC_DIR" 2>/dev/null || true
 
+# remove old templates
+for D in account socialaccount vires documents
+do
+    rm -frv "$TEMPLATES_DIR/$D"
+done
+
 # copy templates
 cp -rv "${EOXS_ALLAUTH_TEMPLATES_ROOT}"/templates/* "$TEMPLATES_DIR" 2>/dev/null || true
