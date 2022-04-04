@@ -28,7 +28,8 @@ python3 "$MNGCMD" user import << END
     "email": "vagrant.aelos.admin@eox.at",
     "groups": [
       "admin",
-      "default"
+      "default",
+      "vre"
     ],
     "user_profile": {
       "country": "AT"
@@ -49,7 +50,8 @@ python3 "$MNGCMD" user import << END
     "last_login": "2016-05-01T00:00:00.000000+00:00",
     "email": "vagrant.aelos.default@eox.at",
     "groups": [
-      "default"
+      "default",
+      "vre"
     ],
     "user_profile": {
       "country": "AT"
@@ -71,7 +73,8 @@ python3 "$MNGCMD" user import << END
     "email": "vagrant.aelos.privileged@eox.at",
     "groups": [
       "default",
-      "privileged"
+      "privileged",
+      "vre"
     ],
     "user_profile": {
       "country": "AT"
