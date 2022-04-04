@@ -24,6 +24,7 @@ OAUTH_SERVER_NTHREAD=${OAUTH_SERVER_NTHREAD:-2}
 
 DEBUG="${DEBUG:-False}"
 
+required_variables EOIAM_HOST
 required_variables VIRES_OPS_DIR
 required_variables OAUTH_VENV_ROOT
 activate_venv "$OAUTH_VENV_ROOT"
