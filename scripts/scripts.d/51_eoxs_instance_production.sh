@@ -193,8 +193,8 @@ INSTALLED_APPS = [
     'aeolus',
 ]
 
-from eoxserver.services.ows.wps.config import DEFAULT_EOXS_PROCESSES
-EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
+EOXS_PROCESSES = [
+    'eoxserver.services.ows.wps.processes.get_time_data.GetTimeDataProcess',
     'aeolus.processes.aux.Level1BAUXISRExtract',
     'aeolus.processes.aux.Level1BAUXMRCExtract',
     'aeolus.processes.aux.Level1BAUXRRCExtract',
