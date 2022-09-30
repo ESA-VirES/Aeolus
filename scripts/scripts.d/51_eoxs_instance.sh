@@ -19,6 +19,7 @@ activate_venv "$VIRES_VENV_ROOT"
 
 AEOLUS_ACCESS_PERMISSION=${AEOLUS_ACCESS_PERMISSION:-aeolus_default}
 AEOLUS_PRIVILEGED_PERMISSION=${AEOLUS_PRIVILEGED_PERMISSION:-aeolus_privileged}
+AEOLUS_L1A_PERMISSION=${AEOLUS_L1A_PERMISSION:-aeolus_l1a_access}
 
 # Configuration switches - all default to YES
 CONFIGURE_VIRES=${CONFIGURE_VIRES:-YES}
@@ -406,6 +407,7 @@ SOCIALACCOUNT_PROVIDERS = {
             # <aeolus-group-name>: <oauth-permission>,
             'aeolus_default': '$AEOLUS_ACCESS_PERMISSION',
             'aeolus_privileged': '$AEOLUS_PRIVILEGED_PERMISSION',
+            'aeolus_l1a_access': '$AEOLUS_L1A_PERMISSION',
         },
     },
 }
