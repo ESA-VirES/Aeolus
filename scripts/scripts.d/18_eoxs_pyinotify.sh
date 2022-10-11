@@ -32,9 +32,15 @@
 # THE SOFTWARE.
 #-------------------------------------------------------------------------------
 
-
 . `dirname $0`/../lib_logging.sh
+. `dirname $0`/../lib_python_venv.sh
 
 info "Installing pyinotify ..."
 
+<<<<<<< HEAD:scripts/scripts.d/16_pyinotify.sh
 pip3 install pyinotify
+=======
+activate_venv "$VIRES_VENV_ROOT"
+
+pip3 install $PIP_OPTIONS pyinotify
+>>>>>>> 2d592b752af1dcb244aca1b128f45cfd4b9236ae:scripts/scripts.d/18_eoxs_pyinotify.sh
