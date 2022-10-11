@@ -37,4 +37,4 @@
 
 info "Installing pyinotify ..."
 
-pip install pyinotify
+pip3 install pyinotify
