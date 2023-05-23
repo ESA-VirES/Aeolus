@@ -19,6 +19,7 @@ activate_venv "$VIRES_VENV_ROOT"
 
 AEOLUS_ACCESS_PERMISSION=${AEOLUS_ACCESS_PERMISSION:-aeolus_default}
 AEOLUS_PRIVILEGED_PERMISSION=${AEOLUS_PRIVILEGED_PERMISSION:-aeolus_privileged}
+AEOLUS_L1A_PERMISSION=${AEOLUS_L1A_PERMISSION:-aeolus_l1a_access}
 
 # Configuration switches - all default to YES
 CONFIGURE_VIRES=${CONFIGURE_VIRES:-YES}
@@ -186,14 +187,15 @@ INSTALLED_APPS = [
     'aeolus',
 ]
 
-from eoxserver.services.ows.wps.config import DEFAULT_EOXS_PROCESSES
-EOXS_PROCESSES = DEFAULT_EOXS_PROCESSES + [
+EOXS_PROCESSES = [
+    'eoxserver.services.ows.wps.processes.get_time_data.GetTimeDataProcess',
     'aeolus.processes.aux.Level1BAUXISRExtract',
     'aeolus.processes.aux.Level1BAUXMRCExtract',
     'aeolus.processes.aux.Level1BAUXRRCExtract',
     'aeolus.processes.aux.Level1BAUXZWCExtract',
     'aeolus.processes.aux_met.AUXMET12Extract',
     'aeolus.processes.dsd.DSDExtract',
+    'aeolus.processes.level_1a.Level1AExtract',
     'aeolus.processes.level_1b.Level1BExtract',
     'aeolus.processes.level_2a.Level2AExtract',
     'aeolus.processes.level_2b.Level2BExtract',
@@ -405,6 +407,7 @@ SOCIALACCOUNT_PROVIDERS = {
             # <aeolus-group-name>: <oauth-permission>,
             'aeolus_default': '$AEOLUS_ACCESS_PERMISSION',
             'aeolus_privileged': '$AEOLUS_PRIVILEGED_PERMISSION',
+            'aeolus_l1a_access': '$AEOLUS_L1A_PERMISSION',
         },
     },
 }

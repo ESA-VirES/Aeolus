@@ -29,7 +29,8 @@ python3 "$MNGCMD" user import << END
     "groups": [
       "admin",
       "default",
-      "vre"
+      "vre",
+      "l1a_access"
     ],
     "user_profile": {
       "country": "AT"

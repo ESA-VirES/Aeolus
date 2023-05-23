@@ -54,7 +54,7 @@ _import_coverage_type() {
 }
 
 # create initial collections
-for product_type in ALD_U_N_1B ALD_U_N_2A ALD_U_N_2B ALD_U_N_2C AUX_ISR_1B AUX_MET_12 AUX_MRC_1B AUX_RRC_1B AUX_ZWC_1B
+for product_type in ALD_U_N_1A ALD_U_N_1B ALD_U_N_2A ALD_U_N_2B ALD_U_N_2C AUX_ISR_1B AUX_MET_12 AUX_MRC_1B AUX_RRC_1B AUX_ZWC_1B
 do
     _create_product_type ${product_type}
     _create_collection_type ${product_type} -p ${product_type}

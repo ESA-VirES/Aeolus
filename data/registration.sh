@@ -16,6 +16,7 @@ then
         $MNGCMD producttype create "$TYPE"
         $MNGCMD collectiontype create "$TYPE" -p "$TYPE"
     done << END
+ALD_U_N_1A
 ALD_U_N_1B
 ALD_U_N_2A
 ALD_U_N_2B
@@ -32,6 +33,7 @@ END
         $MNGCMD collection create $COLLECTION -t $TYPE
     done << END
 ADAM_albedo ADAM_albedo
+ALD_U_N_1A ALD_U_N_1A
 ALD_U_N_1B ALD_U_N_1B
 ALD_U_N_1B ALD_U_N_1B_public
 ALD_U_N_2A ALD_U_N_2A
@@ -49,6 +51,7 @@ END
 fi
 
 OPTIONS="--simplify 0.2"
+$MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_1A -name AE_OPER_ALD_U_N_1A\*DBL ) --collection ALD_U_N_1A --conflict=REPLACE --traceback
 $MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_1B -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B --conflict=REPLACE --traceback
 $MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_1B -name AE_OPER_ALD_U_N_1B\*DBL ) --collection ALD_U_N_1B --conflict=REPLACE --traceback
 $MNGCMD aeolus_product_add $OPTIONS $( find /mnt/data/ALD_U_N_2A -name AE_OPER_ALD_U_N_2A\*DBL ) --collection ALD_U_N_2A --conflict=REPLACE --traceback

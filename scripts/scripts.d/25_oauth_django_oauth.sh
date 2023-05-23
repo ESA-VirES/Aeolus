@@ -13,4 +13,4 @@ info "Installing Django OAuth Toolkit ..."
 
 activate_venv "$OAUTH_VENV_ROOT"
 
-pip3 install $PIP_OPTIONS django-oauth-toolkit
+pip3 install $PIP_OPTIONS 'django-oauth-toolkit>=2.0'
