@@ -330,7 +330,7 @@ _print_comment_if_empty() {
 _print_eoiam_configuration() {
     if [ -n "$2" ]
     then
-    cut - <<END
+    cat - <<END
     '$1': {
         'SERVER_URL': 'https://$2/oauth2',
         'TRUST_EMAILS': True,
