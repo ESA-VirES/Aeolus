@@ -24,7 +24,7 @@ OAUTH_SERVER_NTHREAD=${OAUTH_SERVER_NTHREAD:-2}
 
 DEBUG="${DEBUG:-False}"
 
-required_variables EOIAM_HOST
+#required_variables EOIAM_HOST EOIAM_REF_HOST
 required_variables VIRES_OPS_DIR
 required_variables OAUTH_VENV_ROOT
 activate_venv "$OAUTH_VENV_ROOT"
@@ -319,6 +319,29 @@ END
 
 
 # extending settings.py
+#
+_print_comment_if_empty() {
+    if [ -z "$1" ]
+    then
+        echo -n "#"
+    fi
+}
+
+_print_eoiam_configuration() {
+    if [ -n "$2" ]
+    then
+    cut - <<END
+    '$1': {
+        'SERVER_URL': 'https://$2/oauth2',
+        'TRUST_EMAILS': True,
+        'REQUIRED_GROUP_PERMISSIONS': {
+            'privileged': [('AEOLUS_PRODUCTS_RESTRICTED',)],
+        }
+    },
+END
+    fi
+}
+
 ex "$SETTINGS" <<END
 /^INSTALLED_APPS\s*=/
 /^]$/
@@ -330,19 +353,15 @@ INSTALLED_APPS += [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'vires_oauth.providers.eoiam',
+    `_print_comment_if_empty "$EOIAM_HOST"`'vires_oauth.providers.eoiam',
+    `_print_comment_if_empty "$EOIAM_REF_HOST"`'vires_oauth.providers.eoiam_ref',
     'django_countries',
     'oauth2_provider',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'eoiam': {
-        'SERVER_URL': 'https://$EOIAM_HOST/oauth2',
-        'TRUST_EMAILS': True,
-        'REQUIRED_GROUP_PERMISSIONS': {
-            'privileged': [('AEOLUS_PRODUCTS_RESTRICTED',)],
-        }
-    },
+`_print_eoiam_configuration "eoiam" "$EOIAM_HOST"`
+`_print_eoiam_configuration "eoiam_ref" "$EOIAM_REF_HOST"`
 }
 
 # OAUTH APPS - END - Do not edit or remove this line!
