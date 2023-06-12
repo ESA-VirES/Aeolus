@@ -24,6 +24,7 @@ OAUTH_SERVER_NTHREAD=${OAUTH_SERVER_NTHREAD:-2}
 
 DEBUG="${DEBUG:-False}"
 
+#required_variables EOIAM_HOST EOIAM_REF_HOST
 required_variables VIRES_OPS_DIR
 required_variables OAUTH_VENV_ROOT
 activate_venv "$OAUTH_VENV_ROOT"
@@ -318,6 +319,29 @@ END
 
 
 # extending settings.py
+#
+_print_comment_if_empty() {
+    if [ -z "$1" ]
+    then
+        echo -n "#"
+    fi
+}
+
+_print_eoiam_configuration() {
+    if [ -n "$2" ]
+    then
+    cat - <<END
+    '$1': {
+        'SERVER_URL': 'https://$2/oauth2',
+        'TRUST_EMAILS': True,
+        'REQUIRED_GROUP_PERMISSIONS': {
+            'privileged': [('AEOLUS_PRODUCTS_RESTRICTED',)],
+        }
+    },
+END
+    fi
+}
+
 ex "$SETTINGS" <<END
 /^INSTALLED_APPS\s*=/
 /^]$/
@@ -329,29 +353,15 @@ INSTALLED_APPS += [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.twitter',
-    #'allauth.socialaccount.providers.linkedin_oauth2',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.github',
+    `_print_comment_if_empty "$EOIAM_HOST"`'vires_oauth.providers.eoiam',
+    `_print_comment_if_empty "$EOIAM_REF_HOST"`'vires_oauth.providers.eoiam_ref',
     'django_countries',
     'oauth2_provider',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'linkedin_oauth2': {
-        'SCOPE': [
-            'r_emailaddress',
-            'r_liteprofile',
-        ],
-       'PROFILE_FIELDS': [
-            'id',
-            'firstName',
-            'lastName',
-            'profilePicture',
-            'emailAddress',
-        ],
-    },
+`_print_eoiam_configuration "eoiam" "$EOIAM_HOST"`
+`_print_eoiam_configuration "eoiam_ref" "$EOIAM_REF_HOST"`
 }
 
 # OAUTH APPS - END - Do not edit or remove this line!
@@ -418,7 +428,7 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_LOGIN_ON_GET = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'vires_oauth.forms.SignupForm'
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+#ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = $_SMTP_USE_TLS

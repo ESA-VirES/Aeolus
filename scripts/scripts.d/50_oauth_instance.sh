@@ -278,29 +278,11 @@ INSTALLED_APPS += [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.twitter',
-    #'allauth.socialaccount.providers.linkedin_oauth2',
-    #'allauth.socialaccount.providers.google',
-    #'allauth.socialaccount.providers.github',
     'django_countries',
     'oauth2_provider',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'linkedin_oauth2': {
-        'SCOPE': [
-            'r_emailaddress',
-            'r_liteprofile',
-        ],
-       'PROFILE_FIELDS': [
-            'id',
-            'firstName',
-            'lastName',
-            'profilePicture',
-            'emailAddress',
-        ],
-    },
 }
 
 # OAUTH APPS - END - Do not edit or remove this line!
@@ -368,8 +350,7 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_LOGIN_ON_GET = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'vires_oauth.forms.SignupForm'
-#ACCOUNT_SIGNUP_FORM_CLASS = 'eoxs_allauth.forms.ESASignupForm' #FIXME
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+#ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
 VIRES_OAUTH_DEFAULT_GROUPS = ["default", "vre"]
 VIRES_SERVICE_TERMS_VERSION = "AEOLUS_2019-09-30_V1.0.0"
