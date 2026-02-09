@@ -23,7 +23,7 @@ pip3 install $PIP_OPTIONS "$PACKAGE"
 
 
 # download Aeolus product definition file
-VERSION="20220211"
+VERSION="20230313"
 FILENAME="AEOLUS-${VERSION}.codadef"
 SOURCE_URL="https://github.com/stcorp/codadef-aeolus/releases/download/${VERSION}/${FILENAME}"
 TARGET_DIR="$VENV_ROOT/share/coda/definitions/"
