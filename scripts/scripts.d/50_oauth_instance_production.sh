@@ -334,9 +334,6 @@ _print_eoiam_configuration() {
     '$1': {
         'SERVER_URL': 'https://$2/oauth2',
         'TRUST_EMAILS': True,
-        'REQUIRED_GROUP_PERMISSIONS': {
-            'privileged': [('AEOLUS_PRODUCTS_RESTRICTED',)],
-        }
     },
 END
     fi
