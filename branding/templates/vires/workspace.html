@@ -1,0 +1,559 @@
+{% extends "vires/base.html" %}
+{% load i18n %}
+
+{% block additional_headers %}
+{% endblock additional_headers %}
+
+{% block body %}
+
+{% load static %}
+<script src="{% static 'workspace/bower_components/jquery/jquery.min.js'%}"></script>
+
+{% if user.is_authenticated %}
+
+  {% load account %}
+  {% load vires_oauth %}
+  {% load vre_jhub %}
+
+  <link href="{% static 'css/form_styles.css' %}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'workspace/styles/main.css' %}" />
+
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['setUserId', '{% user_display user %}']);
+    _paq.push(['trackGoal', 3]);
+    _paq.push(['setDocumentTitle', "Workspace"]);
+  </script>
+
+  <!-- Page Content -->
+  <div id="content">
+    <div id="main"></div>
+    <div id="viewContent"></div>
+    <div id="leftSideBar"></div>
+    <div id="rightSideBar"></div>
+    <div id="optionsBar"></div>
+    <div id="topBar"></div>
+    <div id="bottomBar"></div>
+  </div>
+  <div id="storyView" style="z-index: 0"></div>
+  <div id="loadscreen" class="modal-backdrop">
+      <div id="loading-spacer">
+          <div class="project-title">VirES for Aeolus</div>
+      </div>
+      <div class="loader">
+          <div class="inner one"></div>
+          <div class="inner two"></div>
+          <div class="inner three"></div>
+      </div>
+  </div>
+  <!-- HIDDEN DOWNLOAD DIV -->
+  <div id="div-downloads">
+    <iframe name="iframe-download-post" id="iframe-download-post"></iframe>
+  </div>
+  <div id="error-messages"></div>
+  <div id="pngdataurl"></div>
+  <div id="terrain_attribution">
+    <p style="float: right"><a href="javascript:;" onclick="toggle(terrain_attribution)">×</a></p>
+    <p>Terrain map data</p>
+    <ul>
+      <li>OpenStreetMap © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a></li>
+      <li>NaturalEarth <a href="https://www.naturalearthdata.com/about/terms-of-use/" target="_blank">public domain</a></li>
+      <li>EU-DEM © Produced using Copernicus data and information<br>funded by the European Union</li>
+      <li>SRTM © <a href="https://www.nasa.gov" target="_blank">NASA</a></li>
+      <li>GTOPO30</li>
+      <li>CleanTOPO2 public domain</li>
+      <li>GlobCover © <a href="https://www.esa.int" target="_blank">ESA</a></li>
+    </ul>
+    <p>Terrain map design © <a href="https://eox.at" target="_blank">EOX IT Services GmbH</a></p>
+  </div>
+  <script>
+    // Used to display/hide terrain attribution
+    function toggle(e) { e.style.display = (e.style.display == 'block' ? 'none' : 'block'); }
+  </script>
+
+    <script type="text/javascript">
+      var USERPERMISSIONS;
+      USERPERMISSIONS = [
+        {% for perm in user.get_all_permissions %}
+          "{{ perm }}",
+        {% endfor %}
+      ];
+
+      var USERVARIABLE;
+      USERVARIABLE = "{% user_display user %}";
+      this.NAVBARITEMS = [{
+        "name": "{% user_display user %}",
+        "icon": "fa-user",
+        "subitems": [{
+            "name": "Manage access tokens",
+            "url": "{% url 'account_manage_access_tokens' %}"
+        }, {
+            "name": "Change account settings",
+            "url": "{% vires_oauth_url 'account_update_profile' %}"
+        }, {
+            "name": "Leave application",
+            "eventToRaise": "modal:accountLogout"
+        }]
+      }];
+      {% if has_vre_jhub and vre_permission in vires_permissions %}
+      this.NAVBARITEMS[0].subitems.splice(0, 0, {
+        "name": "VRE (JupyterLab)",
+        "url": "{% vre_jhub_url 'oauth_login' %}",
+        "target": "_blank"
+      }, {
+        "type": "divider"
+      });
+      {% endif %}
+      var CONFIG_URL = "{% static 'workspace/scripts/config.json'%}?bust=2.1.2";
+      CESIUM_BASE_URL = "{% static 'workspace/bower_components/cesium/Build/Cesium/'%}";
+      // you can register settings like this before require.js is loaded
+      var require = {
+          baseUrl : "{% static 'workspace/scripts/' %}"
+      };
+    </script>
+    <!-- Modal forms -->
+    <div class="modal fade" id="accountLogout" tabindex="-1" role="dialog" aria-labelledby="accountLogout">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="accountSettingsLabel">Leave the VirES for Aeolus application</h4>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to leave the VirES for Aeolus application?</p>
+          </div>
+          <div class="modal-footer">
+            <form method="post" action="{% url 'account_logout' %}">
+              {% csrf_token %}
+              {% if redirect_field_value %}
+              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+              {% endif %}
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary"><i class="fa fa-sign-out"></i>&nbsp;Leave</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'workspace/bower_components/requirejs/require.js' %}"></script>
+    <script>require(["{% static 'workspace/scripts/init.js' %}?bust=v2.1.41"])</script>
+
+
+    <style type="text/css">
+        /*Overwrite default collapse size*/
+        @media (max-width: 1100px) {
+            .navbar-header {
+                float: none;
+            }
+            .navbar-toggle {
+                display: block;
+            }
+            .navbar-collapse {
+                border-top: 1px solid transparent;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+            }
+            .navbar-collapse.collapse {
+                display: none!important;
+            }
+            .navbar-nav {
+                float: none!important;
+                margin: 7.5px -15px;
+            }
+            .navbar-nav>li {
+                float: none;
+            }
+            .navbar-nav>li>a {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+        }
+
+        @media(min-width: 992px) {
+            #topBar .container {
+                width:990px
+            }
+        }
+        @media(min-width: 1200px) {
+            #topBar .container {
+                width:1190px
+            }
+        }
+    </style>
+
+
+  {% else %}
+
+    <script type="text/javascript">
+      var _paq = _paq || [];
+      _paq.push(['setDocumentTitle', "Landing Page"]);
+    </script>
+
+    <style type="text/css">
+    /*! suit-flex-embed v1.4.0 | MIT License | github.com/suitcss */
+
+      .FlexEmbed {
+        display: block;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .FlexEmbed:before {
+        content: "";
+        display: block;
+        width: 100%;
+      }
+
+      .FlexEmbed--3by1:before {
+        padding-bottom: 33.33333%;
+      }
+
+      .FlexEmbed--2by1:before {
+        padding-bottom: 50%;
+      }
+
+      .FlexEmbed--16by9:before {
+        padding-bottom: 56.25%;
+      }
+
+      .FlexEmbed--4by3:before {
+        padding-bottom: 75%;
+      }
+
+      .CoverImage {
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin: 0 auto 0em;
+        max-width: 2048px;
+        max-height: 648px;
+      }
+      /* Loading image related styles inside template to use template tags*/
+
+      .bg-1 {
+        background: url('{% static 'images/ESA_s_wind_mission_highlight_std_3.jpg' %}') no-repeat center center fixed;
+          background-size: contain;
+      }
+
+      .bg-2 {
+        background: url('{% static 'images/aeolus_banner_3_resize.jpg' %}') no-repeat center center fixed;
+          background-size: contain;
+      }
+
+      .bg-3 {
+        background: url('{% static 'images/Cal_Val_Workshop_2017_photo_resize.jpg' %}') no-repeat center center fixed;
+          background-size: contain;
+      }
+
+      .bg-4 {
+        background: url('{% static 'images/aeolus_vires_features_1.jpg' %}') no-repeat center center;
+          background-size: contain;
+      }
+      .current-version {
+          background-color: #f3f2f3;
+          padding: 10px;
+      }
+
+    </style>
+
+    <!-- Start landing page -->
+    {% load i18n %}
+    {% load account socialaccount %}
+
+    <link href="{% static 'workspace/bower_components/bootstrap/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'css/landing_page.css' %}?v=20220211" rel="stylesheet">
+    <link href="{% static 'css/form_styles.css' %}" rel="stylesheet">
+
+        <!-- Wrap all page content here -->
+    <div id="wrap">
+
+
+    <header class="masthead">
+
+        <div class="CoverImage FlexEmbed FlexEmbed--3by1"
+           style="background-image:url('{% static 'images/aeolus_banner_1_resize_long.jpg' %}');">
+           <div class="image-attribution" style="margin-top:0px; color:white">&copy; ESA/AOES Medialab</div>
+        </div>
+
+    </header>
+
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-custom navbar-inverse navbar-static-top" id="nav">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav nav-justified">
+              <li><a href="#Features">Features</a></li>
+              <li><a href="#Data">Data</a></li>
+              <li><a href="#Signup">Sign-up</a></li>
+              <li><a href="#Login" onclick="document.forms['login-form'].submit()">Log in</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container -->
+    </div><!--/.navbar -->
+
+    <!-- Begin page content -->
+
+    <div class="container">
+
+
+      <div class="page-header text-center">
+        <h1>Atmospheric wind fields observed by satellite</h1>
+        <h3>ESA's Aeolus data is available for anyone to use via the virtual research platform VirES</h3>
+      </div>
+
+        <p class="lead current-version text-center">
+          <strong>Version 3.0</strong> (<a href="/changelog">Changelog</a>)<br>
+          <em>March 2022</em>
+        </p>
+
+        <p class="lead text-center">
+          VirES for Aeolus is a highly interactive data manipulation and retrieval interface for <a href="https://earth.esa.int/eogateway/missions/aeolus" target="_blank">ESA's Aeolus mission</a> products. It includes tools for studying various atmospheric parameters, in space and time, measured by the Aeolus satellite.
+        </p>
+
+        <hr>
+
+      </div>
+    </div>
+
+
+    <section class="bg bg-1">
+      <div class="image-attribution">&copy; ESA</div>
+    </section>
+
+    <div class="divider" id="Features"></div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 larger">
+          <h1>Features</h1>
+
+          <hr>
+          <h2> VirES for Aeolus - Web client</h2>
+          <p>
+            The VirES for Aeolus Web client provides easy access to ESA's Aeolus mission data through the web browser
+            without the need of any software installation. The web client offers on the one side an interactive 3D globe
+            where the measured curtains can be previewed and a very flexible and configurable analytics panel where
+            different plots can be generated.
+          </p>
+          <p>
+            If you are interested in deepening your knowledge in the utilization of the service
+            or want to have a quick peek at how it looks here is a presentation of last workshop providing
+            an in-depth look at the VirES for Aeolus Service.
+          </p>
+          <div class="videowrapper">
+            <iframe src="https://www.youtube.com/embed/tmRHiuzAE8A" allowfullscreen></iframe>
+          </div>
+          <hr>
+          <p>
+              You can additionally find detailed slides on service usage <a target="_blank_" href="eoxs_static/other/Vires_Aeolus_Tutorial.pdf" >here.</a>
+            </br>
+              Below are some screenshots of the web client components.
+          </p>
+    </div>
+  </div>
+  <div class="container">
+    <section class="bg bg-4">
+      <div class="image-attribution">&copy; EOX</div>
+    </section>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3 larger">
+      <h2> VirES for Aeolus - Virtual Research Environment (VRE)</h2>
+      <p>
+        The VirES for Aeolus VRE is the latest extension to the service to allow easier and in-depth data exploitation.
+        This is achieved by providing following service aspects:
+        <ul>
+          <li>a dedicated and pre-configured JupyterLab environment for each user - <a href=https://vre.aeolus.services>https://vre.aeolus.services</a></li>
+          <li>a powerful data access python API - <a target="_blank" href="https://viresclient.readthedocs.io/">VirES Python Client</a></li>
+          <li>an extensive set of examples and documentation - <a target="_blank" href=https://notebooks.aeolus.services>https://notebooks.aeolus.services</a></li>
+        </ul>
+      </p>
+      <img src="{% static 'images/vre_screenshot.png' %}" style="width:75%;margin:1em auto 1em auto;display: block;">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3 larger">
+          <div class="divider"></div>
+          <h2>ESA's Aeolus mission</h2>
+          <p>
+              ESA's Earth Explorer, Aeolus, was launched into space on 22 August 2018. This new satellite type provides novel global observations of wind profiles from the surface up to 30 km altitude.
+              Although there are several ways of measuring wind from a satellite, Aeolus utilises the active Doppler Wind Lidars (DWL) method. This is currently the only technology that can provide direct wind profile observations in clear air, inside thin clouds and aerosol layers and on top of thick clouds globally. In addition, a DWL provides information on cloud top heights and the vertical distribution of thin clouds and aerosol.
+              An improved knowledge of Earth's wind fields will lead to progress in atmospheric dynamics research and weather forecasting. Forecast impact experiments by a number of leading meteorological institutes across the world have shown that Aeolus observations lead to an improvement of operational weather forecasting. The experiments show that the impact is largest in the tropics, southern hemisphere, polar areas and in the upper troposphere and lower stratosphere, where there are currently very few direct wind observations in the Global Observing System of the World Meteorological organization (WMO).
+              The provision of global wind profiles will also benefit climate research. Climate models are similar to weather models, but predict the evolution of the coupled Earth System (atmosphere, land, ocean and ice) on the scale of years rather than days. As for weather forecast models, the key atmospheric variables in climate models are wind, temperature, pressure and humidity. The Aeolus winds will be used to evaluate climate models, and for the improvement of modelling of the global atmospheric transport and cycling of energy, water, aerosols and chemicals.
+              An overview about the Aeolus satellite and its instruments, the Aeolus data products and more detailed information about the Aeolus mission can be found <a target="_blank_" href="https://earth.esa.int/eogateway/missions/aeolus">here</a>.
+          </p>
+          <p>
+              Aeolus product data can be visualized on the platform, plotted over the globe and shown in a scatterplot. The scatterplot allows for multiple x- and y-axes with independent zoom and panning features as well as interactive data-readout. The time slider and various controls offer the possibility to make selections and set criteria for data filtering and visualization which immediately take effect on the display.
+              The subset of Aeolus data, selected by the user in this way, can be downloaded in different encoding formats to fit various use cases.
+              <break>
+              VirEs for Aeolus enables visual and statistical comparison with numerical weather prediction models, analysis with respect to various ancillary data and generation of publication-ready plots and diagrams in an intuitive and, yet powerful and customizable interface.
+          </p>
+
+          <hr>
+
+        </div><!--/col-->
+    </div><!--/container-->
+
+    <div class="divider" id="Data"></div>
+
+    <section class="bg bg-2">
+      <div class="image-attribution">&copy; ESA</div>
+    </section>
+
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 larger">
+          <h1>Data</h1>
+
+          <hr>
+
+          <p>The following Aeolus products are publicly available to all users after registration:</p>
+          <ul>
+            <li style="list-style-type: circle;">
+            <b>Level 1B:</b> Preliminary HLOS (Horizontal Line of Sight) wind observations for Rayleigh and Mie receivers. Standard atmospheric correction (Rayleigh channel), receiver response and bias correction applied.
+            </li>
+            <li style="list-style-type: circle;">
+            <b>Level 2A: Scientific aerosol/cloud profile product for users.</b> Geo-located consolidated backscatter and extinction profiles backscatter-to-extinction and lidar ratio per observation, scene classification, and scene heterogeneity index and attenuated backscatter on measurement level.
+            </li>
+            <li style="list-style-type: circle;">
+            <b>Level 2B: Scientific wind product for users.</b> Geo-located consolidated HLOS wind observation with actual atmospheric correction applied to Rayleigh channel.
+            </li>
+            <li style="list-style-type: circle;">
+            <b>Level 2C:</b> Aeolus assisted wind fields resulting from NWP (Numerical Weather Prediction) assimilation processing. Data co-located time and space with Aeolus wind observations. Product generated by ECMWF.
+            </li>
+          </ul>
+          <p>Access to the following other products of Aeolus is limited to dedicated expert groups:</p>
+          <ul>
+            <li style="list-style-type: circle;">
+            AUX MRC, AUX RRC products (Mie/Rayleigh response calibration).
+            </li>
+            <li style="list-style-type: circle;">
+            AUX ISR products (Instrument Spectral Registration).
+            </li>
+            <li style="list-style-type: circle;">
+            AUX ZWC (Zero-Wind Calibration).
+            </li>
+            <li style="list-style-type: circle;">
+            AUX_MET products (meteorological information).
+            </li>
+          </ul>
+          <p>
+          The relevant documentation for each of the products can be downloaded from the Aeolus Data Description section on ESA Earth Online (<a target="_blank" rel="noopener" href="https://earth.esa.int/eogateway/missions/aeolus">https://earth.esa.int/eogateway/missions/aeolus</a>).
+          </p>
+          <p>
+            In addition:
+            <ul>
+              <li style="list-style-type: circle;">
+              The ADAM products have been collected from the ADAM database ( <a target="_blank" rel="noopener" href="https://adam.noveltis.com/">adam.noveltis.com</a> ), and were produced by the ADAM team under the European Space Agency (ESA) study contract Nr C4000102979.
+              </li>
+            </ul>
+          </p>
+          <p>
+            The data accessible on VirES consists of the newest baseline available and any new data will appear within 4 hours of generation.
+          </p>
+
+        </div><!--/col-->
+    </div><!--/container-->
+
+    <div class="divider"></div>
+
+
+    <section class="bg bg-3">
+      <div class="image-attribution">&copy; Aeolus Cal/Val Workshop, Toulouse, 2017</div>
+    </section>
+
+    <div class="divider" id="Signup"></div>
+
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 larger">
+          <h1>Sign up</h1>
+
+          <hr>
+
+          <p>
+            Access to Aeolus VirES is available only to registered users. Users can self-register for access to  L1B and L2B wind products. Please register here.
+          </p>
+          <div style="text-align: center">
+            <div style="margin-top: 2em;">
+              <form name="signup-form" method="post" action="{% url 'vires_login' %}">
+                {% csrf_token %}
+                <button type="submit" class="linkbutton">Sign up</button>
+              </form>
+            </div>
+          </div>
+          <hr>
+          <p>Access to all other Aeolus datasets is limited to dedicated expert groups. Should you need access to such products, please contact <a href="mailto:EOHelp@esa.int?subject=[VirES-Aeolus]:&nbsp;">EOHelp@esa.int</a>.The request requires approval by the Aeolus Mission Manager.</p>
+
+        </div><!--/col-->
+    </div><!--/container-->
+    <div class="row form-group">
+        <div class="col-xs-10">
+
+        </div>
+    </div>
+
+
+    <div class="divider" id="Login"></div>
+
+    <div class="row">
+
+      <hr>
+
+      <div class="col-sm-6 col-sm-offset-3 larger">
+
+        <div class="row form-group">
+          <h1>Log in</h1>
+          <hr>
+          <p>
+            Log in using your preferred social provider or directly with your account credentials.
+          </p>
+          <div style="text-align: center">
+            <div style="margin-top: 2em;">
+              <form name="login-form" method="post" action="{% url 'vires_login' %}">
+                {% csrf_token %}
+                <button type="submit" class="linkbutton">Log in</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+      </div><!--/row-->
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <div class="divider"></div>
+        <p >
+          Feedback and ideas are very welcome, feel free to contact us under <a href="mailto:feedback@vires.services?subject=[VirES-Aeolus]:&nbsp;">feedback@vires.services</a>.
+        </p>
+       </div>
+    </div>
+
+    <div class="container">
+        <div class="col-sm-8 col-sm-offset-2 text-center">
+
+
+        </div><!--/col-->
+    </div><!--/container-->
+
+    </div><!--/wrap-->
+
+    {% include 'vires/footer.html' %}
+
+    <!-- script references -->
+
+    <script src="{% static 'workspace/bower_components/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'js/landing_page.js' %}"></script>
+
+    <!-- End landing page -->
+
+  {% endif %}
+
+{% endblock body %}

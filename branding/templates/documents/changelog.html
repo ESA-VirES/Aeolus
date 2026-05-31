@@ -1,0 +1,319 @@
+{% extends "documents/base.html" %}
+{% block title %}VirES for Aeolus - Changelog{% endblock title %}
+{% block content %}
+
+<h1>Changelog</h1>
+<hr>
+  <h3>
+    Release of Service v3.0 (2022-03-01)
+  </h3>
+
+<p>
+    Features:
+</p>
+<p>
+    This release provides access to the new Virtual Research Environment (VRE)
+</p>
+<ul>
+  <li><b>VRE integration</b><br>
+    The Jupyter-based
+    <a href="https://vre.aeolus.services" target="_blank">Virtual Research Environment (VRE)</a>
+    has been opened for all VirES users and a direct link has been added
+    to the VirES client user interface.<br>
+  </li>
+  <li><b>Extensive VRE documentation </b> has been made available at
+    <a href="https://notebooks.aeolus.services" target="_blank">https://notebooks.aeolus.services</a>
+  </li>
+  <li>
+    <b>Machine-to-machine (M2M) interface</b><br>
+    The <a href="/ows" target="_blank">VirES server M2M interface</a> has been
+    opened for registered VirES users. This interface has been so
+    far accessible only indirectly trough web client.
+    Now it can used either directly via the low-level API
+    (based on the OGC WPS protocol) or via an alternative VirES
+    client (e.g. <a href="https://viresclient.readthedocs.io/en/latest/" target="_blank">VirES Python Client</a>).
+  </li>
+  <li>
+    <b>Token-based authentication for the M2M interface</b><br>
+    The access to the <a href="/ows" target="_blank">VirES server M2M interface</a>
+    is granted only for authenticated requests.
+    A new option to use the token-based authentication has been
+    added to VirES. The access tokens can be generated and revoked
+    by the users themselves via the user settings of the web client.
+  </li>
+</ul>
+
+<hr>
+  <h3>
+    Release of Service v2.1 (2020-09-30)
+  </h3>
+
+<p>
+    Features:
+</p>
+<p>
+    This release has a focus on user interface enhancements based on user feedback.
+</p>
+<ul>
+    <li>
+      Allow simple unit conversion in Data panel for each parameter (multiplication by user defined power of 10).
+    </li>
+    <li> A logartihmic colorscale option was implemented for the Analytics panel colorscales as well as for the globe visualization.
+    </li>
+    <li> New Analytics panel plot mask functionality for L2A which allows selecting a flag parameter to mask the shown bins in the plot.
+    </li>
+    <li> Multiple updates on the virtual globe component:
+      <ul>
+        <li>Higher resolution image export options</li>
+        <li>Background color selection option</li>
+        <li>Colorscale labels have light white background for better readibility</li>
+        <li>Constant altitude range can be selected in the product settings for what altitude range should be shown on the globe</li>
+      </ul>
+    </li>
+    <li> New overlay layers:
+      <ul>
+        <li>CalVal Sites: Showing calibration and validation sites which can be selected to create selection bounding box</li>
+        <li>Graticule: Showing latitude and longitude grid lines as overlay</li>
+      </ul>
+    </li>
+    <li>
+      Multiple new parameters were introduced for the available products:
+      <ul>
+        <li> L1B:
+          <ul>
+            <li>rayleigh_topocentric_azimuth_of_height_bin</li>
+            <li>rayleigh_topocentric_elevation_of_height_bin</li>
+            <li>rayleigh_target_to_sun_visibility_flag</li>
+            <li>argument_of_latitude_of_dem_intersection (obs)</li>
+            <li>argument_of_latitude_of_dem_intersection (meas)</li>
+            <li>laser_frequency_offset_std_dev</li>
+            <li>uv_energy_std_dev</li>
+            <li>mie_ref_pulse_signal_to_noise_ratio</li>
+            <li>mie_ref_pulse_refined_signal_to_noise_ratio</li>
+            <li>rayleigh_ref_pulse_signal_to_noise_ratio_channel_a</li>
+            <li>rayleigh_ref_pulse_signal_to_noise_ratio_channel_b</li>
+            <li>mie_num_peak_invalid</li>
+            <li>mie_corrected_reference_pulse_response</li>
+            <li>rayleigh_corrected_reference_pulse_response</li>
+            <li>mie_num_invalid_reference_pulse</li>
+            <li>rayleigh_num_invalid_reference_pulse</li>
+            <li>aht_22_tel_m1</li>
+            <li>aht_23_tel_m1</li>
+            <li>aht_24_tel_m1</li>
+            <li>aht_25_tel_m1</li>
+            <li>aht_26_tel_m1</li>
+            <li>aht_27_tel_m1</li>
+            <li>tc_18_tel_m11</li>
+            <li>tc_19_tel_m12</li>
+            <li>tc_20_tel_m13</li>
+            <li>tc_21_tel_m14</li>
+            <li>tc_25_tm15_ths1y</li>
+            <li>tc_27_tm16_ths1y</li>
+            <li>tc_29_ths2</li>
+            <li>tc_23_ths1</li>
+            <li>tc_32_ths3</li>
+            <li>mie_ground_fwhm</li>
+            <li>mie_ground_useful_signal</li>
+            <li>mie_ground_signal_to_noise_ratio</li>
+            <li>mie_ground_refined_signal_to_noise_ratio</li>
+            <li>rayleigh_ground_useful_signal</li>
+            <li>rayleigh_ground_signal_to_noise_ratio</li>
+            <li>mie_average_ground_wind_bin_thickness</li>
+            <li>rayleigh_average_ground_wind_bin_thickness</li>
+            <li>mie_average_ground_wind_bin_thickness_above_dem</li>
+            <li>rayleigh_average_ground_wind_bin_thickness_above_dem</li>
+          </ul>
+        </li>
+        <li> L2B/C:
+          <ul>
+            <li>mie_wind_result_wind_velocity_normalised and rayleigh_wind_result_wind_velocity_normalised: Computed from wind velocity and flipping the sign for bins in the descending direction)</li>
+            <li>aht_22  (mie and rayleight versions)</li>
+            <li>aht_23 (mie and rayleight versions)</li>
+            <li>aht_24 (mie and rayleight versions)</li>
+            <li>aht_25 (mie and rayleight versions)</li>
+            <li>aht_26 (mie and rayleight versions)</li>
+            <li>aht_27 (mie and rayleight versions)</li>
+            <li>tc_18 (mie and rayleight versions)</li>
+            <li>tc_19 (mie and rayleight versions)</li>
+            <li>tc_20 (mie and rayleight versions)</li>
+            <li>tc_21 (mie and rayleight versions)</li>
+            <li>tc_23 (mie and rayleight versions)</li>
+            <li>tc_25 (mie and rayleight versions)</li>
+            <li>tc_27 (mie and rayleight versions)</li>
+            <li>tc_29 (mie and rayleight versions)</li>
+            <li>tc_32 (mie and rayleight versions)</li>
+            <li>mie_wind_result_arg_of_lat_of_DEM_intersection</li>
+            <li>rayleigh_wind_result_arg_of_lat_of_DEM_intersection</li>
+            <li>mie_wind_result_reference_hlos</li>
+            <li>mie_wind_result_extinction</li>
+            <li>mie_wind_result_background_high</li>
+            <li>rayleigh_wind_result_reference_hlos</li>
+            <li>rayleigh_wind_result_background_high</li>
+            <li>mie_wind_result_applied_spacecraft_los_corr_velocity</li>
+            <li>mie_wind_result_applied_m1_temperature_corr_velocity</li>
+            <li>rayleigh_wind_result_wind_to_pressure</li>
+            <li>rayleigh_wind_result_wind_to_temperature</li>
+            <li>rayleigh_wind_result_wind_to_backscatter_ratio</li>
+            <li>rayleigh_wind_result_applied_spacecraft_los_corr_velocity</li>
+            <li>rayleigh_wind_result_applied_rdb_corr_velocity</li>
+            <li>rayleigh_wind_result_applied_ground_corr_velocity</li>
+            <li>rayleigh_wind_result_applied_m1_temperature_corr_velocity</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+</ul>
+
+<hr>
+  <h3>
+    Release of Service v2.0 (2020-03-06)
+  </h3>
+
+<p>
+    Features:
+</p>
+<p>
+    This release focus on visualization performance and ergonomy improvements
+</p>
+<ul>
+    <li> An interactive tutorial has been implemented providing a good overview of the web client. The tutorial should start by itself on the first visit and can be re-started at any other moment by clicking the "Tutorial" button on the navigation bar.</li>
+    <li> A data configuration panel has been implemented where it is possible to select for all products the parameters one is interested in, providing a central configuration point for data settings and reducing data volume transfers. The panel can be opened at any point by clicking on the "Data" button on the navigation bar.</li>
+    <li>It is now possible to select and visualize also 2D Auxiliary parameters for AUX MRC and RRC. It is possible to switch to them by using the group dropdown selection on top of the plots in the analytics panel.</li>
+    <li>When selecting a parameter for the y axis like altitude or bins a default colorscale will be applied.</li>
+    <li>It is possible to invert the y Ayis range (checkbox available in the axis settings).</li>
+    <li>A default observation type filter was configured for L2B/L2C products.</li>
+    <li>A bin range parameter was added to allow displaying bin ranges in the y axis instead of altitude.</li>
+    <li>The magnification method for curtain textures on the globe has been implemented as nearest neighbor resulting in a sharper image when zoomed in.</li>
+    <li>Various bug fixes.</li>
+</ul>
+
+<hr>
+  <h3>
+    Release of Service v1.4 (2019-09-20)
+  </h3>
+
+<p>
+    Features:
+</p>
+<p>
+    This release mainly looks to provide better ergonomics in the analytics functionalities
+    and includes multiple updates.
+</p>
+<ul>
+    <li> Implementation of "multiplot" functionality, allowing to add or remove stacked plots.</li>
+    <li> Support for kml files (some complexer features are not supported, e.g. animation). File can be imported by pressing the "Import kml" button on the globe view.</li>
+    <li>Calculate and provide new parameters for L1B products: Normal Useful Signal, Useful Signal Range Corrected, Rayleigh Signal Intensity (Adds A and B signal intensities).</li>
+    <li>New visualization group for plots of L2A data of middle bin values.</li>
+    <li>AUX MET data layer settings provides filter option for altitude.</li>
+    <li>Binary mask filters allow activation/deactivation of each bit for filtering.</li>
+    <li>Default filter criteria have been changed for:
+      <ul>
+        <li> L1B: mie/rayleigh bin quality flag (first bit set to 0 - overall validity)</li>
+        <li> L2B/L2C:  mie_wind_result_validity_flag and rayleigh_wind_result_validity_flag have been set to true as default </li>
+      </ul>
+    </li>
+    <li>Filters (with ranges) have a new button on top that allows to set (or modify) min max filter extent.</li>
+    <li>Default configurations were changed:
+      <ul>
+        <li> L2B layer is activated by default</li>
+        <li> rayleigh is now shown as default parameter on globe for L1B, L2B and L2C</li>
+        <li> rayleigh is shown on top in analytics panel</li>
+        <li> default colorscale was changed for wind speed parameters</li>
+      </ul>
+    </li>
+    <li>Colorscales were harmonized between layer and plot settings</li>
+    <li>Bug fixes</li>
+</ul>
+
+<hr>
+  <h3>
+    Release of Service v1.3 (2019-03-22)
+  </h3>
+
+<p>
+    Features:
+</p>
+<ul>
+      <li>
+        In order to better satisfy the Cal/Val users the main effort has been put in better support of L2A and L2B products.<br>
+        Group visualizations for L2A and L2B have been implemented. This can be viewed by selecting the group granularity in the layer settings (which now open automatically when activating a layer).<br>
+        For the L2B group visualization a new colorscale as well as a "pages" concept that allows to view groups in groups of 3 has been implemented.<br>
+        A new drop down selection has been implemented allowing to choose what "visualization group" should be displayed in a plot. This allows plotting for example multiple mie related parameters in both plots for L1b.<br>
+        Added ICA parameter for L2A. Using the drop down selection it is possible to visualize also ICA parameters in L2A product.<br>
+        The filtering of the download netCDF file has been reworked, now using netCDF filter masks for applying the filters.<br>
+        Some missing measurement parameters (for L1b) and downloaded parameters (for L2B) have been added.<br>
+        An edit button has been introduced for modifying the extent of axis.<br>
+      </li>
+</ul>
+
+<hr>
+  <h3>
+    Release of Service v1.2 (2018-12-21)
+  </h3>
+
+<p>
+    Features:
+</p>
+<ul>
+      <li>
+        This release includes new features as well as improvements based on user feedback.<br>
+        A big focus was put in increasing performance, loading times of datasets have been greatly reduced.<br>
+        Access and visualization of AUX MET products has been implemented, allowing also visualization of 2D parameters. In order to make access to this large dataset possible scaling has been introduced. The scaling factor is shown on the top left corner of the screen. The different parameters can be accessed by opening the Layer Settings panel which can be opened from the Layers panel.<br>
+        Product overlap removal of L1B, L2A and L2B has been introduced. When there is overlap of data in time the "newest" data is taken.<br>
+        For downloaded data additional information has been added about used time and area selections, as well as filters and file identifiers of original files.<br>
+        A workspace element was added to the navigation bar which includes, import, export and reset. Through this menu it possible to download (export) and share your current selection or to reload specific configurations when wanted using the import function.<br>
+        New export options for saving plots have been added, it is possible to increase resolution of output image and to change the file type.<br>
+        For L1B, L2A and L2B the albedo values are extracted and can be added as rendering option in the analytics panel.<br>
+        Parameters added to the right y-axis are now plotted on top of parameters selected on the parameters selected on the left axis.<br>
+        In the axis options of the analytics viewer it is possible to activate "secondary ticks". Only parameters for which the data extent does not change greatly over time create representative ticks. For example, combining mie range parameter with altitude only works for short time intervals as the extent of the mie range data changes a lot during longer time periods. For a short time period it should create representative "sub ticks".<br>
+        Additional parameters can be now used for "altitude"/y-Axis in 2D plots for L1B and L2B data (range, COG range and range bin number).<br>
+      </li>
+</ul>
+
+<hr>
+  <h3>
+    Release of Service v1.1 (2018-08-31)
+  </h3>
+
+<p>
+    Features:
+</p>
+<ul>
+      <li><b>Comissioning Phase Release</b></br>
+        Multiple improvements have been introduced in this release as preparation for the commissioning phase work.</br>
+        Main support for MRC, RRC, ISR, ZWC and L1b product types has been implemented.</br>
+        The download functionality was implemented. The current available download format is NetCDF. It is possible to download using filters and selecting custom parameters if you are only interested in specific ones. When no custom parameters are selected a defined set of parameters is used as default.</br>
+        Download of packages of original files. In the Download Panel a new "Package original files" button has been introduced that creates a ZIP of the files that fall within the current time and area selection.
+        In the Download panel a new "i" button was added on the listed processing jobs (left of the download link button). When clicking the information button the original files (bold) that apply to that process plus the source data information used to create those files is shown in a tabular form.</br>
+        The scatterplot library was updated bringing among other things some performance improvements. When selecting/clicking a point when looking at AUX data the text box will show all related parameter values.</br>
+        It is possible to apply a colorscale (third axis) to the data points. By clicking on the cog symbol on the top left corner the panel with the displayed variables will be shown, clicking on the label name will show the options. Clicking the "Apply Colorscale" checkbox will show two new dropdowns, one to select the wanted parameter and the second to select the wanted colorscale. Also a transparency value can be set for rendered points.</br>
+        The albedo maps shown on the globe now are updated when selecting a different time interval in the timeline as well as change form nadir/off-nadir depending on the currently selected product.</br>
+        A new "i" Information button has been implemented for AUX data in the analytics panel (below the save icon) which displays "single value data" for each of the products in a tabular form. Can be shown/hidden by clicking on the button.</br>
+        The filter panel can now be hidden using the arrow button and filters can be managed by adding them using the "Add filter" button and removed by clicking on the "x" button on each of the filters.</br>
+        Saving of the workspace has also been implemented, the list of filters for each product type that have been added/removed is now kept between sessions as well as the set filter extents.</br>
+        Other things are also maintained between sessions, such as camera position, selected time, and selected area.</br>
+        The filters now also apply to the rendered points on the globe.</br>
+        Different granularity (observation/measurement) can be selected for L1b data in the settings panel.</br>
+      </li>
+</ul>
+
+<hr>
+  <h3>
+    Release of Service v0.5 (2017-12-20)
+  </h3>
+
+<p>
+    Features:
+</p>
+<ul>
+      <li><b>First (Internal) Release</b></br>
+      This is the first (internal) release of the service intended for internal first tests and to facilitate communication in the team about features and requirements. It provides access to a first Aeolus dataset. </br>
+      Currently a test set of 86 L1B products has been registered and can be accessed through the service. It is possible to visualize HLOS Rayleigh and Mie wind speeds observations as curtain objects on the globe and at the same time both parameters as two synchronized plots in the newly developed Analytics Panel. </br>
+      In order to visualize a specific time range the timeslider at the bottom of the screen can be used to click and drag to create a time selection with the mouse. There are multiple configuration and exploration possibilities. Using the layer settings (of the layer panel) it is possible to configure to display either Mie or Rayleigh wind speeds as a curtain object on the globe, as well as set the extent and colorscale for the visualization. In the analytics panel a new mask filter feature has been implemented that allows filtering based on the desired mask bits (description shown on mouse over). The filters apply also to the visualized curtains on the globe.</br>
+      The general functionality corresponds to the current technological status of VirES for SWARM. However, Aeolus specific features have been added to allow analysis and virtualization of the Aeolus specific datasets. These features include the display of Aeolus-Curtains on the Globe Viewer as well as multiple X- and Y-axis in the Analytics Viewer. The filtering has been adapted to the Aeolus specific parameters.
+      </li>
+</ul>
+
+<hr>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% load static %}
+<div id="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+
+            <a href="https://eox.at" target="_blank" style="text-decoration: none;">
+              <img style="height:30px; display:inline;" src="{% static 'images/EOX_Logo_inverted.png' %}">
+            </a>
+            <p class="text-muted" style="display:inline;">service for</p>
+            <a href="https://www.esa.int" target="_blank" style="text-decoration: none;">
+              <img style="height:50px;  display:inline; margin-left:4px;" src="{% static 'images/esa_logo_white.png' %}">
+            </a>
+            <p class="text-muted" style="display:inline;"> <br> Scientific Partners: </p>
+            <a href="https://www.dlr.de" target="_blank" style="text-decoration: none;">
+              <img style="height:50px; display:inline;" src="{% static 'images/DLR_Logo_inverted.png' %}">
+            </a>
+            {% comment %}
+            <a href="http://dorit.de" target="_blank" style="text-decoration: none;">
+            <img style="height:50px; display:inline;" src="{% static 'images/DoRIT-Logo_inverted.png' %}">
+            </a>
+            {% endcomment %}
+            <a style="text-decoration: none;">
+              <img style="height:50px; display:inline;" src="{% static 'images/DoRIT-Logo_inverted.png' %}">
+            </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 text-muted" style="text-align: center; margin-top:15px;">
+        <a style="display:inline; margin-right:5px;" href="/data_terms" target="_blank_">ESA Data Terms</a> |
+        <a style="display:inline; margin-left:5px;" href="/service_terms" target="_blank_">VirES Service Terms</a> |
+        <a style="display:inline; margin-left:5px;" href="/privacy_notice" target="_blank_">Privacy Notice</a> |
+        <a href="https://earth.esa.int/eogateway/missions/aeolus" target="_blank">Aeolus Mission</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="nav pull-right scroll-top">
+  <li><a href="#" title="Scroll to top"><i class="glyphicon glyphicon-chevron-up"></i></a></li>
+</ul>

@@ -1,0 +1,118 @@
+{% extends "documents/base.html" %}
+{% block title %}VirES for Aeolus - Frequently Asked Questions{% endblock title %}
+{% block content %}
+
+<style type="text/css">
+  .decimal li{
+    list-style-type: decimal;
+    list-style-position: outside;
+  }
+
+  .circle > li{
+    list-style-type: circle;
+    list-style-position: outside;
+  }
+</style>
+
+<div style="margin-bottom: 2em;">
+	<h2>FAQ – Frequently Asked Questions</h2>
+</div>
+<div style="margin-bottom: 2em;">
+  <ol class="decimal">
+    <li><a href="#sync">What is the synchronization status and last available data?</a></li>
+    <li><a href="#datadownload">How are the output files formatted when downloading through the service?</a></li>
+    <li><a href="#controls">How do I control the globe/map?</a></li>
+    <li><a href="#validation">Has there been a scientific validation of the service?</a></li>
+    <li><a href="#contribute">Can I contribute to the evolution of VirES, and how?</a></li>
+    <li><a href="#browser">Is there any difference which Web browser I use for VirES?</a></li>
+    <li><a href="#profile">How do I change my user profile/delete my account?</a></li>
+    <li><a href="#vires">Who owns VirES?</a></li>
+    <li><a href="#contact">How can I contact VirES?</a></li>
+    <li><a href="#upload">How does the upload functionality work?</a></li>
+  </ol>
+</div>
+
+
+<div class="panel panel-default">
+  <div class="panel-heading">1. <a name="sync"> What is the synchronization status and last available data?</a></div>
+  <div class="panel-body">
+    Aeolus product data are synchronized with the mission’s official product archive such that latest data are accessible via VirES at maximum 4 hours after publication by ESA. This applies also when reprocessed versions of historic product data are published. 
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">2. <a name="sync"> How are the output files formatted when downloading through the service?</a></div>
+  <div class="panel-body">
+    The download offers two options, either to package original files, which provides a package with all files (products) relevant to the current selection or to process the file taking into account also filtering and subsetting based on time and area. The processed file is provided in netCDF format. A description of this format can be found <a target="_blank_" href="/eoxs_static/other/VirES-Aeolus_netCDF_output_desc.pdf" >here.</a>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">3. <a name="controls">How do I control the globe/map?</a></div>
+  <div class="panel-body">
+    <p>The VirES workspace includes a virtual globe and map widget. The interaction controls are the following:</p>
+    <p>The mouse pointer device is used on the globe/map as follows:</p>
+    <ul class="circle">
+      <li>Left click position, hold, move mouse: pan map (rotate globe)</li>
+      <li>Turn wheel forward / backward: zoom in / out</li>
+      <li>Press wheel, hold, and move mouse forward / backward: shallower / steeper 3D viewing angle</li>
+      <li>Press wheel, hold, and move mouse left / right: rotate map clockwise /counter-clockwise</li>
+    </ul>
+    <p>The Select Area button changes the left click behaviour of mouse: 1<sup>st</sup> click defines a corner and 2<sup>nd</sup> click defines the diagonally opposite corner of the geographic Area of Interest shown on the globe/map.</p>
+    <p>The symbol button on the top-right allows switching between appearances/projections (2D, 2.5D, 3D)</p>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">4. <a name="validation">Has there been a scientific validation of the service?</a></div>
+  <div class="panel-body">
+    Senior scientist at DLR, DORIT, and mission experts at ESA/ESRIN have been members of the project team involved in the detailed specification of VirES and its accurate validation at various stages of evolution (prototype, release candidate, operational service).
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">5. <a name="contribute">Can I contribute to the evolution of VirES, and how?</a></div>
+  <div class="panel-body">
+    An online user forum and problem solution area is currently under preparation. You will receive a notification by email as soon this will be opened to anybody wishing to provide ideas and improvement suggestions to the VirES application engineers and to the service provider team. VirES is a Free and Open Source Software initiative meaning that you are also invited to get involved into branching out software code and to contribute your own enhancements to it. The code is maintained and related issues are publicly tracked under <a href="https://github.com/ESA-VirES">ESA-VirES</a>.
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">6. <a name="browser">Is there any difference which Web browser I use for VirES?</a></div>
+  <div class="panel-body">
+    Google Chrome is fastest in rendering SVG and has a very good HTML-5 features support. Therefore, it is the recommended browser. Nonetheless, all other major browsers (Microsoft Internet Explorer and Edge, Firefox, Opera, Safari) in their most recent releases have been tested and found working properly. Some features of VirES perform differently depending on the used browser. Touch screen interaction is supported. Mobile devices which support HTML can also be used. Small screens are, however not practical for a number of service functions. It is always a good idea to have the latest video drivers running on your computer.
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">7. <a name="profile">How do I change my user profile/delete my account?</a></div>
+  <div class="panel-body">
+    You can change your password, e-mail, user profile information, and connected social account on the settings page which you reach by clicking on your name displayed in the banner bar of the VirES workspace window. You can have your account deleted by sending an e-mail message to the service operator using the address <a href="mailto:support@vires.services?subject=[VirES-Aeolus]:&nbsp;" target="_top">support@vires.services</a>.
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">8. <a name="vires">Who owns VirES?</a></div>
+  <div class="panel-body">
+    "VirES for Aeolus" is a service required and implemented by the Earth Observation Directorate of the <a href="https://www.esa.int">European Space Agency</a> (ESA) and designed and operated by <a href="https://eox.at/">EOX IT Services GmbH</a> (EOX), a private company. The technical framework entirely consists of Free and Open Source Software (MIT style licence). EOX is currently the sole committer to the code repository (hoping that other developer will be joining soon). The site is hosted on the servers of EOX. The domain name aeolus.services is owned by EOX. The information uploaded and generated by using the VirES service are owned by the individual who performed the specific upload and generated output as defined in the personal data privacy strategy of the service.
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">9. <a name="contact">How can I contact VirES?</a></div>
+  <div class="panel-body">
+    <p>The email address via which to reach the service operator personnel is <a href="mailto:support@vires.services?subject=[VirES-Aeolus]:&nbsp;" target="_top">support@vires.services</a>.</p>
+    <p>Feedback and ideas are very welcome, feel free to contact us under <a href="mailto:feedback@vires.services?subject=[VirES-Aeolus]:&nbsp;">feedback@vires.services</a>.</p>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">10. <a name="upload">How does the upload functionality work?</a></div>
+  <div class="panel-body">
+    <p>The upload functionality allows you to upload your own (modified) files in order to compare them to the latest available baseline available on the VirES platform.</p>
+    <p>The service requires files with the same name (identifier) and internal structure as the available product you are interested in comparing.</p>
+    <p>Select your uncompressed file (as DBF or EEF) through the file manager or drop it in the upload area. Once the upload is finished make sure to select the same Layer/product type as the uploaded file. The time interval of the uploaded file should be shown as a blue rectangle (or point if zoomed out) in the time line at the bottom. When selecting a time interval inside of the product time range additional parameters with the suffix _user and _diff will be available for plotting. The _user variables provide values from the uploaded file and the _diff variables provides calculated difference to the original file.</p>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,223 @@
+{% load i18n %}
+{% load static %}
+{% load vires_oauth %}
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="apple-touch-icon" sizes="57x57" href="{% static 'other/favicon/apple-touch-icon-57x57.png' %}">
+  <link rel="apple-touch-icon" sizes="60x60" href="{% static 'other/favicon/apple-touch-icon-60x60.png' %}">
+  <link rel="apple-touch-icon" sizes="72x72" href="{% static 'other/favicon/apple-touch-icon-72x72.png' %}">
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static 'other/favicon/apple-touch-icon-76x76.png' %}">
+  <link rel="apple-touch-icon" sizes="114x114" href="{% static 'other/favicon/apple-touch-icon-114x114.png' %}">
+  <link rel="apple-touch-icon" sizes="120x120" href="{% static 'other/favicon/apple-touch-icon-120x120.png' %}">
+  <link rel="apple-touch-icon" sizes="144x144" href="{% static 'other/favicon/apple-touch-icon-144x144.png' %}">
+  <link rel="apple-touch-icon" sizes="152x152" href="{% static 'other/favicon/apple-touch-icon-152x152.png' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'other/favicon/apple-touch-icon-180x180.png' %}">
+  <link rel="icon" type="image/png" href="{% static 'other/favicon/favicon-32x32.png' %}" sizes="32x32">
+  <link rel="icon" type="image/png" href="{% static 'other/favicon/android-chrome-192x192.png' %}" sizes="192x192">
+  <link rel="icon" type="image/png" href="{% static 'other/favicon/favicon-96x96.png' %}" sizes="96x96">
+  <link rel="icon" type="image/png" href="{% static 'other/favicon/favicon-16x16.png' %}" sizes="16x16">
+  <link rel="manifest" href="{% static 'other/favicon/manifest.json' %}">
+  <link rel="mask-icon" href="{% static 'other/favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
+  <link rel="shortcut icon" href="{% static 'other/favicon/favicon.ico' %}">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="{% static 'other/favicon/mstile-144x144.png' %}">
+  <meta name="msapplication-config" content="{% static 'other/favicon/browserconfig.xml' %}">
+  <meta name="theme-color" content="#ffffff">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}VirES for Aeolus{% endblock title %}</title>
+  {% block additional_headers %}
+    <script src="{% static 'js/landing_page.js' %}"></script>
+    <link href="{% static 'css/landing_page.css' %}?v=20220211" rel="stylesheet">
+    <link href="{% static 'css/form_styles.css' %}" rel="stylesheet">
+    <script src="{% static 'workspace/bower_components/jquery/jquery.min.js'%}"></script>
+    <script src="{% static 'workspace/bower_components/bootstrap/dist/js/bootstrap.min.js'%}"></script>
+    <link href="{% static 'workspace/bower_components/bootstrap/dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet">
+  {% endblock additional_headers %}
+  <style type="text/css">
+    /*Styling for messages div to be on top and
+     floating over all elements */
+    #messagescontainer{
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      right: 0;
+      top: 66px;
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/social_providers.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/cookie_banner.css' %}" />
+</head>
+<body>
+  {% block messages %}
+    {% if messages %}
+      <div class="container" id="messagescontainer" style="z-index: 5001;width:40%;">
+        <div class="row">
+          <div class="col-xs-12">
+            <div>
+              {% for message in messages %}
+              <div class="alert alert-{% if message.tags %}{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}{% else %}success{% endif %} fade in djangoalert"><!-- alert-warning alert-danger -->
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">&times;</a>
+                {{ message|capfirst }}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript">
+        setTimeout(function(){
+          if ($('.djangoalert').length > 0) {
+            $('.djangoalert').remove();
+          }
+        }, 5000)
+      </script>
+    {% endif %}
+  {% endblock messages %}
+
+  {% block body %}
+    <div class="navbar navbar-inverse navbar-fixed-top not-selectable" style="position:relative; margin-bottom: 0px">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+            <a class="navbar-brand" href="/" style="font-size:30px">VirES for Aeolus</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav" id="tab-headers-main">
+            <li class="divider-vertical"></li>
+            <li>
+              <a class="tab-header" href="/" title="Return to VirES for Aeolus workspace.">
+                <i class="fa fa-fw fa-laptop"></i> Workspace
+              </a>
+            </li>
+            {% block navbaritems %}
+              {% if user.is_authenticated %}
+                {% load account %}
+                <li class="dropdown">
+                  <a class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-fw fa-user"></i> {% user_display user %}
+                  </a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="{% url 'account_manage_access_tokens' %}">Manage access tokens</a></li>
+                    <li><a href="{% vires_oauth_url 'account_update_profile' %}">Change account settings</a></li>
+                    <li><a class="tab-header" data-toggle="modal" data-target="#accountLogout"></i>Leave application</a></li>
+                  </ul>
+                </li>
+                <li>
+                </li>
+              {% else %}
+                <li>
+                  <form name="login-form" method="post" action="{% url 'vires_login' %}">{% csrf_token %}</form>
+                  <a class="tab-header" href="#" onclick="document.forms['login-form'].submit()">
+                    <i class="fa fa-fw fa-sign-in"></i> Log in
+                  </a>
+                </li>
+              {% endif %}
+            {% endblock navbaritems %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {% block page_layout %}
+
+      <div class="row" style="min-height: 87%;">
+        <div class="col-sm-6 col-sm-offset-3 larger">
+          {% block content %}
+          {% endblock content %}
+        </div>
+      </div>
+
+      {% include 'vires/footer.html' %}
+
+    {% endblock page_layout %}
+
+    {% if user.is_authenticated %}
+      <!-- Modal forms -->
+      <div class="modal fade" id="accountLogout" tabindex="-1" role="dialog" aria-labelledby="accountLogout">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="accountLoginLabel">Leave the VirES for Aeolus application</h4>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to leave the VirES for Aeolus application?</p>
+            </div>
+            <div class="modal-footer">
+              <form method="post" action="{% url 'account_logout' %}">
+                {% csrf_token %}
+                {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary"><i class="fa fa-sign-out"></i>&nbsp;Leave</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+  {% endblock body %}
+
+    <script src="{% static 'js/cookie_banner.js'%}"></script>
+    <script type="text/javascript">
+      var _paq = _paq || [];
+      function startPiwicTracking() {
+        // user has given consent to process their data
+        // Check if the title was set already somewhere else
+        var documentTitleSet = false;
+        for (var i = _paq.length - 1; i >= 0; i--) {
+        if (_paq[i][0]=="setDocumentTitle"){
+          documentTitleSet = true;
+        }
+        }
+        // only if it is not set set it here with the default
+        if(!documentTitleSet){
+        _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+        }
+
+        _paq.push(["setDoNotTrack", true]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+         var u="//nix.eox.at/piwik/";
+         _paq.push(['setTrackerUrl', u+'piwik.php']);
+         _paq.push(['setSiteId', 8]);
+         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+         g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+      }
+    </script>
+    <noscript><p><img src="//nix.eox.at/piwik/piwik.php?idsite=4" style="border:0;" alt="" /></p></noscript>
+    <script type="text/javascript">
+      var window_onload = window.onload;
+      window.onload = function() {
+        if (window_onload) window_onload();
+        var html = '<div>' +
+            'You may choose to prevent this website from aggregating and analyzing '+
+            'the actions you take here. Doing so will protect your privacy, but it '+
+            'will also prevent the service provider from learning from your actions '+
+            'and creating a better experience for you and other users. '+
+            'For further information see our <a href="/privacy_notice" target="_blank">Privacy Notice</a>.'+
+            '</div>';
+
+        // Add the accept button
+        html += '<div class="cookiebutton ok"><a href="javascript:void(0);" onclick="CookieBanner.accept();startPiwicTracking();"><span>Accept</span></a></div>';
+        html += '<div class="cookiebutton notok"><a href="javascript:void(0);" onclick="CookieBanner.deny();"><span>Decline</span></a></div>';
+
+        CookieBanner.showUnlessInteracted(html);
+        if (CookieBanner._checkCookie(CookieBanner.cookieName) == 'accepted') {
+          startPiwicTracking();
+        }
+      }
+    </script>
+</body>
+</html>
