@@ -1,4 +1,5 @@
 [
+  {"identifier": "ADAM_albedo", "collectionType": "ADAM_albedo"},
   {"identifier": "ALD_U_N_1A", "collectionType": "ALD_U_N_1A", "allowedGroups": ["aeolus_l1a_access"]},
   {"identifier": "ALD_U_N_1B", "collectionType": "ALD_U_N_1B", "allowedGroups": ["aeolus_default"]},
   {"identifier": "ALD_U_N_2A", "collectionType": "ALD_U_N_2A", "allowedGroups": ["aeolus_default"]},
