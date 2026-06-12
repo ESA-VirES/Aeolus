@@ -1,0 +1,17 @@
+[
+  {"identifier": "ALD_U_N_1A", "collectionType": "ALD_U_N_1A", "allowedGroups": ["aeolus_l1a_access"]},
+  {"identifier": "ALD_U_N_1B", "collectionType": "ALD_U_N_1B", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "ALD_U_N_2A", "collectionType": "ALD_U_N_2A", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "ALD_U_N_2B", "collectionType": "ALD_U_N_2B", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "ALD_U_N_2C", "collectionType": "ALD_U_N_2C", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "ALD_U_N_1A_EOL", "collectionType": "ALD_U_N_1A", "allowedGroups": ["aeolus_l1a_access"]},
+  {"identifier": "ALD_U_N_1B_EOL", "collectionType": "ALD_U_N_1B", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "ALD_U_N_2A_EOL", "collectionType": "ALD_U_N_2A", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "ALD_U_N_2B_EOL", "collectionType": "ALD_U_N_2B", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "ALD_U_N_2C_EOL", "collectionType": "ALD_U_N_2C", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "AUX_ISR_1B", "collectionType": "AUX_ISR_1B", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "AUX_MET_12", "collectionType": "AUX_MET_12", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "AUX_MRC_1B", "collectionType": "AUX_MRC_1B", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "AUX_RRC_1B", "collectionType": "AUX_RRC_1B", "allowedGroups": ["aeolus_default"]},
+  {"identifier": "AUX_ZWC_1B", "collectionType": "AUX_ZWC_1B", "allowedGroups": ["aeolus_default"]}
+]

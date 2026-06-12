@@ -1,0 +1,12 @@
+[
+    {"name": "ALD_U_N_1A", "allowedProductTypes": ["ALD_U_N_1A"]},
+    {"name": "ALD_U_N_1B", "allowedProductTypes": ["ALD_U_N_1B"]},
+    {"name": "ALD_U_N_2A", "allowedProductTypes": ["ALD_U_N_2A"]},
+    {"name": "ALD_U_N_2B", "allowedProductTypes": ["ALD_U_N_2B"]},
+    {"name": "ALD_U_N_2C", "allowedProductTypes": ["ALD_U_N_2C"]},
+    {"name": "AUX_ISR_1B", "allowedProductTypes": ["AUX_ISR_1B"]},
+    {"name": "AUX_MET_12", "allowedProductTypes": ["AUX_MET_12"]},
+    {"name": "AUX_MRC_1B", "allowedProductTypes": ["AUX_MRC_1B"]},
+    {"name": "AUX_RRC_1B", "allowedProductTypes": ["AUX_RRC_1B"]},
+    {"name": "AUX_ZWC_1B", "allowedProductTypes": ["AUX_ZWC_1B"]}
+]
