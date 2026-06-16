@@ -1,0 +1,42 @@
+[
+  {
+    "name": "admin",
+    "title": "VirES for Aeolus administrator",
+    "permissions": [
+      "admin",
+      "aeolus_default",
+      "aeolus_privileged",
+      "aeolus_vre",
+      "aeolus_calval"
+    ]
+  },
+  {
+    "name": "default",
+    "title": "VirES for Aeolus default user",
+    "permissions": [
+      "aeolus_default"
+    ]
+  },
+  {
+    "name": "privileged",
+    "title": "VirES for Aeolus privileged user",
+    "permissions": [
+      "aeolus_default",
+      "aeolus_privileged"
+    ]
+  },
+  {
+    "name": "vre",
+    "title": "Aeolus VRE user",
+    "permissions": [
+      "aeolus_vre"
+    ]
+  },
+  {
+    "name": "l1a_access",
+    "title": "VirES for Aeolus user with access to L1A",
+    "permissions": [
+      "aeolus_l1a_access"
+    ]
+  }
+]
