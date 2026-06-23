@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^ows$', wrap_protected_api(ows), name="ows"),
     url(r'^accounts/', include('eoxs_allauth.urls')),
     url(r'^upload/$', wrap_protected_api(upload_user_file)),
-    url(r'^probe/$', probe, name="probe"),
+    url(r'^probe$', probe, name="probe"),
 ] + document_urlpatterns
