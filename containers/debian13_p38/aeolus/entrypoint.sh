@@ -71,6 +71,8 @@ _fix_permissions() {
     chown "$VIRES_USER:$VIRES_GROUP" -R "$VIRES_HOME"
     chown "$VIRES_USER:$VIRES_GROUP" -R "$VIRES_SOCKET_DIR"
     chown "$VIRES_USER:$VIRES_GROUP" -R "$VIRES_WPS_DIR"
+    chown "$VIRES_USER:$VIRES_GROUP" -R "$AEOLUS_OPTIMIZED_DIR"
+    chown "$VIRES_USER:$VIRES_GROUP" -R "$AEOLUS_UPLOAD_DIR"
 }
 
 initialize_instance() {

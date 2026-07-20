@@ -30,6 +30,7 @@ CREATE_OPTIONS="\
     --volume ${POD_NAME:-vires-server}--aeolus-upload:/srv/vires/upload \
     --volume ${POD_NAME:-vires-server}--aeolus-wps:/srv/vires/wps \
     --volume $AEOLUS_DATA:/srv/vires/data:ro \
+    --volume ./volumes/optimized:/srv/vires/optimized \
 "
 EXEC_OPTIONS="--user vires"
 RUN_OPTIONS="$CREATE_OPTIONS --entrypoint /bin/bash"
