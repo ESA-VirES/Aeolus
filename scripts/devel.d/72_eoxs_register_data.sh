@@ -1,1 +1,0 @@
-../scripts.d/72_eoxs_register_data.sh
