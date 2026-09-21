@@ -38,7 +38,7 @@ _create_log_file() {
 }
 
 _fix_home_permissions() {
-    chown "$VIRES_USER:$VIRES_GROUP" -R "$VIRES_HOME"
+    chown "$VIRES_USER:$VIRES_GROUP" -R "$VIRES_HOME" || true
 }
 
 initialize_instance() {
