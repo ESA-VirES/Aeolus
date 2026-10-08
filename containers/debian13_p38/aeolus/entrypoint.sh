@@ -75,6 +75,11 @@ _fix_permissions() {
     chown "$VIRES_USER:$VIRES_GROUP" -R "$AEOLUS_UPLOAD_DIR"
 }
 
+_link_file() (
+    mkdir -p "$2"
+    ln -vf "$1" "$2/$(basename "$1")"
+)
+
 initialize_instance() {
     echo "Creating log files ..."
 
@@ -95,6 +100,16 @@ initialize_instance() {
 
     # copy extra Aeolus static files
     cp -rv "${VIRES_ROOT}/sources/static/"* "$STATIC_DIR" || true
+
+    # fix for the shared static assets
+    (
+        cd "$STATIC_DIR/workspace"
+        _link_file bower_components/jquery/jquery.min.js jquery/dist
+        _link_file bower_components/bootstrap/dist/js/bootstrap.min.js bootstrap/dist/js
+        _link_file bower_components/bootstrap/dist/css/bootstrap.min.css bootstrap/dist/css
+        _link_file bower_components/underscore-amd/underscore-min.js underscore-amd
+        _link_file bower_components/backbone-amd/backbone-min.js backbone-amd
+    )
 
     # copy Aeolus templates
     for D in account socialaccount vires documents
