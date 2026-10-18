@@ -1,0 +1,26 @@
+[
+    {
+        "name": "admin",
+        "description": "VirES administration"
+    },
+    {
+        "name": "aeolus_default",
+        "description": "Access to Aeolus Public Datasets"
+    },
+    {
+        "name": "aeolus_privileged",
+        "description": "Access to Aeolus Restricted Datasets"
+    },
+    {
+        "name": "aeolus_vre",
+        "description": "Access to Aeolus VRE"
+    },
+    {
+        "name": "aeolus_disc",
+        "description": "Access to Aeolus DISC"
+    },
+    {
+        "name": "aeolus_l1a_access",
+        "description": "Access to Aeolus L1A data"
+    }
+]

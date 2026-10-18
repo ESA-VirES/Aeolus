@@ -1,0 +1,43 @@
+dependencies:
+  - python >=3.13,<3.14
+  - pip
+  - pycurl
+  - setproctitle
+  - psycopg2
+  - jinja2
+  - jsonschema
+  - pyyaml
+  - redis-py
+  - gunicorn
+  - msgpack-python
+  - ply
+  - numpy
+  - scipy
+  - matplotlib
+  # EOxServer dependencies
+  - sqlite
+  - libspatialite
+  - gdal
+  - mapserver
+  # Aeolus dependencies
+  - netcdf4
+  - coda
+  - pip:
+      - django >=5.2,<6.0
+      - django-requestlogging
+      - django-allauth
+      - django-countries
+      - PyJWT
+      # EOxServer dependencies
+      - python-dateutil
+      - django-model-utils
+      - django-utils-six ==2.0
+      - django-prometheus
+      - tzdata
+      - zipstream
+      - lxml
+      - pycql
+      - pyows >=0.2.6
+      - python-keystoneclient
+      - python-swiftclient
+      - jsonfield

@@ -1,0 +1,15 @@
+dependencies:
+  - python >=3.13,<3.14
+  - pip
+  - setproctitle
+  - psycopg2
+  - jinja2
+  - gunicorn
+  - pip:
+      - django >=5.2,<6.0
+      - django-requestlogging
+      - django-allauth
+      - django-countries
+      - django-oauth-toolkit
+      - PyJWT
+      - altcha >=2.0.0
