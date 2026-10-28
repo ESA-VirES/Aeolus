@@ -1,7 +1,7 @@
 # common settings
 
 export POD_PORT="9300"
-export POD_NAME="aeolus-server-debian13-p312-dev"
+export POD_NAME="aeolus-server-debian13-p313-dev"
 
 list_managed_images() {
     cat - << END
