@@ -17,7 +17,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SITE_ID = 1
 ALLOWED_HOSTS = ['*', '127.0.0.1', '::1']
