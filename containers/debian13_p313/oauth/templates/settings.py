@@ -45,14 +45,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'vires_oauth.middleware.session_idle_timeout',
     'vires_oauth.middleware.access_logging_middleware',
     'vires_oauth.middleware.inactive_user_logout_middleware',
     'vires_oauth.middleware.oauth_user_permissions_middleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.gzip.GZipMiddleware',
 ]
 
@@ -64,15 +63,14 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Altcha parameters
-#ALTCHA = {
-#    "ENABLED": True,
-#    "INCLUDE_MAXNUMBER": False,
-#    "ALGORITHM": "SHA-256",
-#    "MAX_NUMBER": 100000,
-#    "SALT_LENGTH": 12,
-#    "EXPIRE_SECONDS": 24 * 3600,
-#}
-
+ALTCHA = {
+    "ENABLED": True,
+    "INCLUDE_MAXNUMBER": True,
+    "ALGORITHM": "SHA-256",
+    "MAX_NUMBER": 500000,
+    "SALT_LENGTH": 12,
+    "EXPIRE_SECONDS": 24 * 3600,
+}
 
 # Django oauth2_provider
 OAUTH2_PROVIDER = {
@@ -87,11 +85,16 @@ CSRF_COOKIE_NAME = "oauth:csrftoken"
 SESSION_COOKIE_NAME = "oauth:sessionid"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSIONS_IDLE_TIMEOUT = 600
+SCRIPT_PREFIX = "/oauth"
 LOGIN_URL = "/oauth/accounts/login/"
 LOGIN_REDIRECT_URL = "/oauth"
 ACCOUNT_LOGOUT_REDIRECT_URL = LOGIN_REDIRECT_URL
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_REQUIRED = True
+# NOTE: ACCOUNT_AUTHENTICATION_METHOD replaced by ACCOUNT_LOGIN_METHODS
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+# NOTE: ACCOUNT_EMAIL_REQUIRED, ACCOUNT_USERNAME_REQUIRED,
+#       ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE, ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE
+#       replaced by ACCOUNT_SIGNUP_FIELDS
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'email2*', 'username*', 'password1*', 'password2*']
 #ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
@@ -103,7 +106,6 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
 ACCOUNT_PASSWORD_MIN_LENGTH = 8
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
-ACCOUNT_USERNAME_REQUIRED = True
 SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 #SOCIALACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -111,7 +113,6 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_LOGIN_ON_GET = False
 ACCOUNT_SIGNUP_FORM_CLASS = 'vires_oauth.forms.SignupForm'
-ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
 VIRES_OAUTH_DEFAULT_GROUPS = ["default", "vre", "privileged"]
 VIRES_SERVICE_TERMS_VERSION = "AEOLUS_2019-09-30_V1.0.0"

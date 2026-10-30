@@ -20,6 +20,7 @@ dependencies:
   - gdal
   - mapserver
   # Aeolus dependencies
+  - libgdal-hdf5
   - netcdf4
   - coda
   - pip:
