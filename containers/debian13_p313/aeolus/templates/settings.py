@@ -1,9 +1,13 @@
 # VirES for Aeolus development server settings
+
 from os.path import join, abspath, dirname
 
-PROJECT_DIR = dirname(abspath(__file__))
+SECURE_REFERRER_POLICY="strict-origin-when-cross-origin"
 
 DEBUG = True
+
+PROJECT_DIR = dirname(abspath(__file__))
+PROJECT_URL_PREFIX = ''
 
 MANAGERS = ADMINS = ()
 
@@ -46,8 +50,8 @@ SECRET_KEY = '{{SECRET_KEY}}'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'allauth.account.middleware.AccountMiddleware',
@@ -93,41 +97,6 @@ INSTALLED_APPS = [
     #'eoxserver.webclient'
     'aeolus',
 ]
-
-#EOXS_SERVICE_HANDLERS = [
-#    'eoxserver.services.ows.wps.v10.getcapabilities.WPS10GetCapabilitiesHandler',
-#    'eoxserver.services.ows.wps.v10.describeprocess.WPS10DescribeProcessHandler',
-#    'eoxserver.services.ows.wps.v10.execute.WPS10ExecuteHandler',
-#]
-
-EOXS_PROCESSES = [
-    'eoxserver.services.ows.wps.processes.get_time_data.GetTimeDataProcess',
-    'aeolus.processes.aux.Level1BAUXISRExtract',
-    'aeolus.processes.aux.Level1BAUXMRCExtract',
-    'aeolus.processes.aux.Level1BAUXRRCExtract',
-    'aeolus.processes.aux.Level1BAUXZWCExtract',
-    'aeolus.processes.aux_met.AUXMET12Extract',
-    'aeolus.processes.dsd.DSDExtract',
-    'aeolus.processes.level_1a.Level1AExtract',
-    'aeolus.processes.level_1b.Level1BExtract',
-    'aeolus.processes.level_2a.Level2AExtract',
-    'aeolus.processes.level_2b.Level2BExtract',
-    'aeolus.processes.level_2c.Level2CExtract',
-    'aeolus.processes.raw_download.RawDownloadProcess',
-    'aeolus.processes.remove_job.RemoveJob',
-    'aeolus.processes.list_jobs.ListJobs',
-]
-
-EOXS_ASYNC_BACKENDS = [
-    'eoxs_wps_async.backend.WPSAsyncBackendBase',
-]
-
-EOXS_WMS_DIM_RANGES_SEPARATOR = ';'
-EOXS_WMS_DIM_RANGE_SEPARATOR = ','
-EOXS_VALIDATE_IDS_NCNAME = False
-
-AEOLUS_OPTIMIZED_DIR = "{{AEOLUS_OPTIMIZED_DIR}}/{product_type}/{collection}"
-USER_UPLOAD_DIR = "{{AEOLUS_UPLOAD_DIR}}"
 
 LOGGING = {
     'version': 1,
@@ -203,6 +172,40 @@ LOGGING = {
     },
 }
 
+EOXS_SERVICE_HANDLERS = [
+    'eoxserver.services.ows.wps.v10.getcapabilities.WPS10GetCapabilitiesHandler',
+    'eoxserver.services.ows.wps.v10.describeprocess.WPS10DescribeProcessHandler',
+    'eoxserver.services.ows.wps.v10.execute.WPS10ExecuteHandler',
+]
+
+EOXS_PROCESSES = [
+    'eoxserver.services.ows.wps.processes.get_time_data.GetTimeDataProcess',
+    'aeolus.processes.aux.Level1BAUXISRExtract',
+    'aeolus.processes.aux.Level1BAUXMRCExtract',
+    'aeolus.processes.aux.Level1BAUXRRCExtract',
+    'aeolus.processes.aux.Level1BAUXZWCExtract',
+    'aeolus.processes.aux_met.AUXMET12Extract',
+    'aeolus.processes.dsd.DSDExtract',
+    'aeolus.processes.level_1a.Level1AExtract',
+    'aeolus.processes.level_1b.Level1BExtract',
+    'aeolus.processes.level_2a.Level2AExtract',
+    'aeolus.processes.level_2b.Level2BExtract',
+    'aeolus.processes.level_2c.Level2CExtract',
+    'aeolus.processes.raw_download.RawDownloadProcess',
+    'aeolus.processes.list_jobs.ListJobs',
+    'aeolus.processes.remove_job.RemoveJob',
+]
+
+EOXS_ASYNC_BACKENDS = [
+    'eoxs_wps_async.backend.WPSAsyncBackendBase',
+]
+
+EOXS_WMS_DIM_RANGES_SEPARATOR = ';'
+EOXS_WMS_DIM_RANGE_SEPARATOR = ','
+EOXS_VALIDATE_IDS_NCNAME = False
+
+AEOLUS_OPTIMIZED_DIR = "{{AEOLUS_OPTIMIZED_DIR}}/{product_type}/{collection}"
+USER_UPLOAD_DIR = "{{AEOLUS_UPLOAD_DIR}}"
 
 # Django-Allauth settings
 
