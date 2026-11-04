@@ -21,8 +21,10 @@ instance_exists() {
 create_new_instance() {
     echo "Creating Django instance ..."
     django-admin startproject "$INSTANCE_NAME" "$INSTANCE_DIR"
+}
 
-    echo "Fixing instance configuration ..."
+update_instance_configuration() {
+    echo "Setting instance configuration ..."
     render_template "$CONFIGURATION_TEMPLATES_DIR/settings.py" "$VIRES_ROOT/secrets.conf" > "$INSTANCE_DIR/$INSTANCE_NAME/settings.py"
     cp "$CONFIGURATION_TEMPLATES_DIR/urls.py" "$INSTANCE_DIR/$INSTANCE_NAME/urls.py"
 }
@@ -88,6 +90,7 @@ then
     then
         create_new_instance
     fi
+    update_instance_configuration
     initialize_instance
 
     touch "$FLAG_FILE"

@@ -12,17 +12,16 @@ conda activate "$CONDA_ENV_NAME"
 
 # -----------------------------------------------------------------------------
 
-_build_from_sdist() (
-    cd "$1"
-    rm -fR dist/ build/
-    python3 ./setup.py sdist
-    SDIST="`ls ./dist/*.tar.gz | tail -n 1`"
-    [ -n "$SDIST" ] && pip3 install $PIP_OPTIONS "$SDIST"
-)
+#_build_from_sdist() (
+#    cd "$1"
+#    rm -fR dist/ build/
+#    python3 ./setup.py sdist
+#    SDIST="`ls ./dist/*.tar.gz | tail -n 1`"
+#    [ -n "$SDIST" ] && pip3 install $PIP_OPTIONS "$SDIST"
+#)
 
 install_deployment_packages() {
-    #pip3 install --root-user-action=ignore -e /usr/local/eoxserver
-    _build_from_sdist /usr/local/eoxserver
+    pip3 install --root-user-action=ignore -e /usr/local/eoxserver
     pip3 install --root-user-action=ignore -e /usr/local/aeolus
     pip3 install --root-user-action=ignore -e /usr/local/vires/eoxs_allauth
     #pip3 install --root-user-action=ignore -e /usr/local/vires_sync # FIXME
@@ -39,8 +38,10 @@ create_new_instance() {
     echo "Creating EOxServer instance ..."
     eoxserver-instance.py "$DJANGO_INSTANCE_NAME" "$INSTANCE_DIR"
     chmod +x "$INSTANCE_DIR/manage.py"
+}
 
-    echo "Fixing instance configuration ..."
+update_instance_configuration() {
+    echo "Setting instance configuration ..."
     render_template "$CONFIGURATION_TEMPLATES_DIR/settings.py" "$VIRES_ROOT/secrets.conf" > "$INSTANCE_DIR/$DJANGO_INSTANCE_NAME/settings.py"
     cp "$CONFIGURATION_TEMPLATES_DIR/urls.py" "$INSTANCE_DIR/$DJANGO_INSTANCE_NAME/urls.py"
     render_template "$CONFIGURATION_TEMPLATES_DIR/eoxserver.conf" "$VIRES_ROOT/options.conf" > "$INSTANCE_DIR/$DJANGO_INSTANCE_NAME/conf/eoxserver.conf"
@@ -150,6 +151,7 @@ then
     then
         create_new_instance
     fi
+    update_instance_configuration
     initialize_instance
 
     touch "$FLAG_FILE"
